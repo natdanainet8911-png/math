@@ -1,0 +1,1522 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#05060f">
+<title>QUIZ NOVA ∞ — คณิต·ตรรกศาสตร์ & ชีววิทยา ม.4 เทอม 1</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
+<style>
+/* ============ TOKENS ============ */
+:root{
+  --bg:#05060f; --c1:#6C5CE7; --c2:#00E5FF; --c3:#FF2E93; --c4:#00FFA3;
+  --warn:#FFB020; --bad:#FF4D6D;
+  --txt:#EAF0FF; --muted:#8E9CC4; --stroke:rgba(255,255,255,.14);
+  --r:22px; --ease:cubic-bezier(.22,.9,.25,1);
+}
+*,*::before,*::after{box-sizing:border-box}
+html,body{height:100%;margin:0;padding:0}
+body{
+  font-family:'Kanit',system-ui,-apple-system,'Segoe UI',sans-serif;
+  background:var(--bg);color:var(--txt);overflow:hidden;
+  -webkit-font-smoothing:antialiased;touch-action:manipulation;
+  transition:filter .6s var(--ease);
+}
+button{font-family:inherit}
+::selection{background:var(--c3);color:#fff}
+/* ============ BACKGROUND FX ============ */
+#fx{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none}
+#stars{position:absolute;inset:0;width:100%;height:100%;opacity:.9}
+.blob{position:absolute;border-radius:50%;filter:blur(90px);opacity:.42;mix-blend-mode:screen;will-change:transform}
+.b1{width:56vmax;height:56vmax;background:radial-gradient(circle,#6C5CE7,transparent 62%);top:-22vmax;left:-14vmax;animation:drift1 24s ease-in-out infinite}
+.b2{width:48vmax;height:48vmax;background:radial-gradient(circle,#00E5FF,transparent 62%);bottom:-20vmax;right:-14vmax;animation:drift2 28s ease-in-out infinite}
+.b3{width:40vmax;height:40vmax;background:radial-gradient(circle,#FF2E93,transparent 62%);top:34%;left:48%;animation:drift3 32s ease-in-out infinite}
+@keyframes drift1{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(12vmax,10vmax) scale(1.18)}}
+@keyframes drift2{0%,100%{transform:translate(0,0) scale(1.1)}50%{transform:translate(-14vmax,-8vmax) scale(.9)}}
+@keyframes drift3{0%,100%{transform:translate(-50%,0) scale(.95)}50%{transform:translate(-30%,-12vmax) scale(1.2)}}
+.gridfloor{position:absolute;left:-50%;right:-50%;bottom:-10%;height:60%;
+  background-image:linear-gradient(rgba(0,229,255,.16) 1px,transparent 1px),linear-gradient(90deg,rgba(0,229,255,.16) 1px,transparent 1px);
+  background-size:60px 60px;transform:perspective(420px) rotateX(70deg);
+  mask-image:linear-gradient(to top,#000,transparent 72%);
+  -webkit-mask-image:linear-gradient(to top,#000,transparent 72%);
+  animation:floor 9s linear infinite;opacity:.55}
+@keyframes floor{to{background-position:0 60px,60px 0}}
+.vignette{position:absolute;inset:0;background:radial-gradient(ellipse at 50% 40%,transparent 35%,rgba(0,0,0,.72) 100%)}
+body.fever .blob{opacity:.72;filter:blur(70px)}
+body.fever{animation:feverHue 6s linear infinite}
+@keyframes feverHue{0%,100%{filter:hue-rotate(0)}50%{filter:hue-rotate(-28deg) saturate(1.25)}}
+/* ============ LAYOUT ============ */
+.screen{position:fixed;inset:0;z-index:2;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;
+  padding:calc(env(safe-area-inset-top) + 18px) 16px calc(env(safe-area-inset-bottom) + 28px);
+  opacity:0;pointer-events:none;transform:scale(.97) translateY(18px);filter:blur(8px);
+  transition:opacity .55s var(--ease),transform .55s var(--ease),filter .55s var(--ease)}
+.screen.on{opacity:1;pointer-events:auto;transform:none;filter:none}
+.wrap{width:100%;max-width:880px;margin:0 auto}
+.glass{position:relative;background:linear-gradient(160deg,rgba(255,255,255,.075),rgba(255,255,255,.02));
+  backdrop-filter:blur(20px) saturate(150%);-webkit-backdrop-filter:blur(20px) saturate(150%);border-radius:var(--r)}
+.glass::before{content:'';position:absolute;inset:0;border-radius:inherit;padding:1px;
+  background:linear-gradient(140deg,rgba(0,229,255,.8),rgba(108,92,231,.25) 45%,rgba(255,46,147,.7));
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none}
+/* ============ HOME ============ */
+.hero{text-align:center;padding:26px 0 8px;animation:rise .8s var(--ease) both}
+@keyframes rise{from{opacity:0;transform:translateY(26px)}to{opacity:1;transform:none}}
+.mark{width:96px;height:96px;margin:0 auto 14px;position:relative}
+.mark svg{width:100%;height:100%;filter:drop-shadow(0 0 18px rgba(0,229,255,.6))}
+.ringA{animation:spin 9s linear infinite;transform-origin:50% 50%}
+.ringB{animation:spin 6s linear infinite reverse;transform-origin:50% 50%}
+@keyframes spin{to{transform:rotate(360deg)}}
+h1.title{font-family:'Orbitron',sans-serif;font-size:clamp(34px,10vw,68px);letter-spacing:2px;margin:0;line-height:1;
+  background:linear-gradient(100deg,#00E5FF,#fff 28%,#FF2E93 58%,#00FFA3 88%);background-size:260% 100%;
+  -webkit-background-clip:text;background-clip:text;color:transparent;animation:shine 7s linear infinite}
+@keyframes shine{to{background-position:260% 0}}
+.sub{color:var(--muted);font-size:clamp(13px,3.4vw,16px);margin:10px 0 2px;font-weight:300}
+.chips{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:16px 0 4px}
+.chip{font-size:12px;padding:7px 13px;border-radius:999px;border:1px solid var(--stroke);
+  background:rgba(255,255,255,.05);color:#cfe0ff;backdrop-filter:blur(6px);animation:pop .5s var(--ease) both}
+.chip:nth-child(2){animation-delay:.08s}.chip:nth-child(3){animation-delay:.16s}.chip:nth-child(4){animation-delay:.24s}
+@keyframes pop{from{opacity:0;transform:scale(.8) translateY(8px)}to{opacity:1;transform:none}}
+.sectionLabel{font-size:12px;letter-spacing:3px;color:var(--muted);text-transform:uppercase;margin:26px 0 12px;display:flex;align-items:center;gap:10px}
+.sectionLabel::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,var(--stroke),transparent)}
+.subjects{display:grid;grid-template-columns:repeat(auto-fit,minmax(232px,1fr));gap:14px}
+.sbj{position:relative;padding:20px 18px;border-radius:18px;cursor:pointer;overflow:hidden;text-align:left;
+  border:1px solid var(--stroke);background:linear-gradient(150deg,rgba(255,255,255,.07),rgba(255,255,255,.02));
+  color:var(--txt);transition:transform .35s var(--ease),border-color .3s,box-shadow .4s;animation:rise .7s var(--ease) both}
+.sbj:nth-child(2){animation-delay:.1s}.sbj:nth-child(3){animation-delay:.2s}
+.sbj::after{content:'';position:absolute;inset:0;background:linear-gradient(110deg,transparent 32%,rgba(255,255,255,.16) 50%,transparent 68%);
+  transform:translateX(-130%);transition:transform .8s var(--ease)}
+.sbj:hover::after{transform:translateX(130%)}
+.sbj:hover{transform:translateY(-5px)}
+.sbj.sel{border-color:var(--pc);box-shadow:0 14px 44px -16px var(--pc),inset 0 0 0 1px var(--pc)}
+.sbj .ic{font-size:30px;line-height:1}
+.sbj h3{margin:10px 0 4px;font-size:18px;font-weight:600}
+.sbj p{margin:0;font-size:12.5px;color:var(--muted);font-weight:300;line-height:1.6}
+.sbj .tick{position:absolute;top:12px;right:12px;width:24px;height:24px;border-radius:50%;display:grid;place-items:center;
+  background:var(--pc);color:#04101a;font-size:13px;font-weight:700;opacity:0;transform:scale(.4);transition:.3s var(--ease)}
+.sbj.sel .tick{opacity:1;transform:scale(1)}
+.pills{display:flex;flex-wrap:wrap;gap:9px}
+.pill{padding:10px 17px;border-radius:999px;border:1px solid var(--stroke);background:rgba(255,255,255,.04);
+  color:var(--muted);font-size:13.5px;cursor:pointer;transition:.28s var(--ease)}
+.pill:hover{color:#fff;border-color:rgba(255,255,255,.35);transform:translateY(-2px)}
+.pill.sel{background:linear-gradient(120deg,var(--c2),var(--c1));color:#04101a;font-weight:600;border-color:transparent;
+  box-shadow:0 10px 26px -12px var(--c2)}
+.actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:26px}
+.btn{position:relative;overflow:hidden;border:none;cursor:pointer;border-radius:16px;padding:16px 26px;font-size:16px;font-weight:600;
+  color:#04101a;background:linear-gradient(115deg,var(--c2),var(--c4) 55%,var(--c1));background-size:200% 100%;
+  transition:transform .3s var(--ease),box-shadow .35s,background-position .6s;box-shadow:0 14px 40px -14px var(--c2);flex:1;min-width:190px}
+.btn:hover{transform:translateY(-3px);background-position:100% 0;box-shadow:0 20px 50px -14px var(--c2)}
+.btn:active{transform:translateY(0) scale(.985)}
+.btn::after{content:'';position:absolute;inset:0;background:linear-gradient(110deg,transparent 35%,rgba(255,255,255,.55) 50%,transparent 65%);
+  transform:translateX(-130%);animation:sweep 3.4s var(--ease) infinite}
+@keyframes sweep{0%{transform:translateX(-130%)}55%,100%{transform:translateX(130%)}}
+.btn.ghost{background:rgba(255,255,255,.05);color:var(--txt);border:1px solid var(--stroke);box-shadow:none}
+.btn.ghost::after{display:none}
+.btn.ghost:hover{border-color:var(--c2);color:#fff}
+/* ============ HUD ============ */
+.hud{position:sticky;top:0;z-index:20;display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:20px;margin-bottom:16px}
+.hudTimer{position:relative;width:62px;height:62px;flex:none}
+.hudTimer svg{width:100%;height:100%;transform:rotate(-90deg)}
+.hudTimer .bgr{stroke:rgba(255,255,255,.1)}
+.hudTimer .fgr{stroke:url(#tg);stroke-linecap:round;transition:stroke .6s}
+.hudTimer .tval{position:absolute;inset:0;display:grid;place-items:center;font-family:'Orbitron',sans-serif;font-size:13px;letter-spacing:.5px}
+.hudTimer.warn .tval{color:var(--warn)}
+.hudTimer.crit{animation:beat 1s ease-in-out infinite}
+.hudTimer.crit .tval{color:var(--bad)}
+@keyframes beat{0%,100%{transform:scale(1)}18%{transform:scale(1.12)}36%{transform:scale(1)}}
+.hudMid{flex:1;min-width:0}
+.hudRow{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
+.lvl{font-size:11px;letter-spacing:2px;color:var(--muted)}
+.comboTxt{font-family:'Orbitron',sans-serif;font-size:13px;color:var(--c4)}
+.bar{height:7px;border-radius:99px;background:rgba(255,255,255,.09);overflow:hidden;margin-top:7px}
+.bar i{display:block;height:100%;width:0%;border-radius:99px;background:linear-gradient(90deg,var(--c4),var(--c2),var(--c3));
+  background-size:200% 100%;transition:width .6s var(--ease);animation:shine 3s linear infinite}
+.hudScore{text-align:right;flex:none}
+.hudScore b{display:block;font-family:'Orbitron',sans-serif;font-size:clamp(19px,5vw,26px);line-height:1;
+  background:linear-gradient(120deg,#fff,var(--c2));-webkit-background-clip:text;background-clip:text;color:transparent}
+.hudScore span{font-size:10px;letter-spacing:2px;color:var(--muted)}
+.iconRow{display:flex;gap:7px;flex:none}
+.ibtn{width:38px;height:38px;border-radius:12px;border:1px solid var(--stroke);background:rgba(255,255,255,.05);
+  color:var(--txt);font-size:15px;cursor:pointer;display:grid;place-items:center;transition:.25s var(--ease)}
+.ibtn:hover{border-color:var(--c2);transform:translateY(-2px);color:var(--c2)}
+/* ============ QUESTION CARD ============ */
+.qcard{padding:24px 20px;border-radius:var(--r);position:relative;overflow:hidden}
+.qcard::after,.qcard .brk{position:absolute;width:26px;height:26px;pointer-events:none}
+.brk{border:2px solid var(--c2);opacity:.55}
+.brk.tl{top:10px;left:10px;border-right:0;border-bottom:0;border-radius:8px 0 0 0}
+.brk.tr{top:10px;right:10px;border-left:0;border-bottom:0;border-radius:0 8px 0 0}
+.brk.bl{bottom:10px;left:10px;border-right:0;border-top:0;border-radius:0 0 0 8px}
+.brk.br{bottom:10px;right:10px;border-left:0;border-top:0;border-radius:0 0 8px 0}
+.qmeta{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:14px}
+.tag{font-size:11px;padding:5px 11px;border-radius:999px;border:1px solid var(--stroke);color:#cfe0ff;background:rgba(255,255,255,.05)}
+.tag.sub{border-color:var(--c2);color:var(--c2)}
+.tag.d1{border-color:var(--c4);color:var(--c4)}
+.tag.d2{border-color:var(--warn);color:var(--warn)}
+.tag.d3{border-color:var(--c3);color:var(--c3)}
+.qno{margin-left:auto;font-family:'Orbitron',sans-serif;font-size:12px;color:var(--muted)}
+.qtext{font-size:clamp(17px,4.6vw,23px);line-height:1.75;white-space:pre-line;font-weight:400;margin:0 0 4px;word-break:break-word}
+.qcard.in .qtext{animation:qIn .6s var(--ease) both}
+@keyframes qIn{from{opacity:0;transform:translateY(16px) rotateX(-8deg);filter:blur(5px)}to{opacity:1;transform:none;filter:none}}
+/* ============ CHOICES ============ */
+.choices{display:grid;gap:11px;margin-top:18px}
+@media(min-width:720px){.choices{grid-template-columns:1fr 1fr}}
+.choice{--ac:#00E5FF;position:relative;overflow:hidden;display:flex;align-items:center;gap:13px;text-align:left;width:100%;
+  min-height:62px;padding:14px 16px;color:var(--txt);font-size:clamp(14px,3.6vw,16.5px);cursor:pointer;
+  background:linear-gradient(135deg,rgba(255,255,255,.08),rgba(255,255,255,.025));border:1px solid var(--stroke);
+  clip-path:polygon(0 0,calc(100% - 16px) 0,100% 16px,100% 100%,16px 100%,0 calc(100% - 16px));
+  transition:transform .28s var(--ease),border-color .28s,box-shadow .38s,background .28s;
+  animation:chIn .5s var(--ease) both}
+.choice:nth-child(1){animation-delay:.06s}.choice:nth-child(2){animation-delay:.13s}
+.choice:nth-child(3){animation-delay:.2s}.choice:nth-child(4){animation-delay:.27s}
+@keyframes chIn{from{opacity:0;transform:translateY(18px) scale(.97)}to{opacity:1;transform:none}}
+.choice::after{content:'';position:absolute;inset:0;background:linear-gradient(110deg,transparent 32%,rgba(255,255,255,.15) 50%,transparent 68%);
+  transform:translateX(-130%);transition:transform .75s var(--ease)}
+.choice:hover::after{transform:translateX(130%)}
+.choice:hover{transform:translateY(-3px);border-color:var(--ac);box-shadow:0 14px 34px -16px var(--ac)}
+.choice .k{flex:none;width:32px;height:32px;display:grid;place-items:center;font-family:'Orbitron',sans-serif;font-size:13px;
+  background:rgba(255,255,255,.1);border:1px solid var(--stroke);transform:rotate(45deg);border-radius:7px}
+.choice .k span{transform:rotate(-45deg)}
+.choice .tx{flex:1;white-space:pre-line;line-height:1.55}
+.choice[disabled]{cursor:default}
+.choice.ok{border-color:var(--c4);background:linear-gradient(135deg,rgba(0,255,163,.22),rgba(0,255,163,.06));
+  box-shadow:0 0 0 1px var(--c4),0 16px 40px -14px var(--c4);animation:okPulse .7s var(--ease)}
+.choice.ok .k{background:var(--c4);color:#04140d;border-color:var(--c4)}
+@keyframes okPulse{0%{transform:scale(1)}40%{transform:scale(1.035)}100%{transform:scale(1)}}
+.choice.no{border-color:var(--bad);background:linear-gradient(135deg,rgba(255,77,109,.2),rgba(255,77,109,.05));animation:shake .5s}
+.choice.no .k{background:var(--bad);color:#fff;border-color:var(--bad)}
+@keyframes shake{10%,90%{transform:translateX(-3px)}20%,80%{transform:translateX(5px)}30%,50%,70%{transform:translateX(-8px)}40%,60%{transform:translateX(8px)}}
+.choice.dim{opacity:.4;filter:grayscale(.5)}
+/* ============ EXPLAIN ============ */
+.explain{margin-top:16px;border-radius:18px;padding:0 18px;max-height:0;overflow:hidden;opacity:0;
+  background:linear-gradient(150deg,rgba(0,229,255,.08),rgba(108,92,231,.05));border:1px solid transparent;
+  transition:max-height .6s var(--ease),opacity .45s,padding .5s,border-color .5s}
+.explain.show{max-height:1400px;opacity:1;padding:18px;border-color:var(--stroke)}
+.exHead{display:flex;align-items:center;gap:10px;font-weight:600;margin-bottom:10px;font-size:15px}
+.exHead .dot{width:9px;height:9px;border-radius:50%;background:var(--c4);box-shadow:0 0 12px var(--c4);animation:blink 1.6s infinite}
+@keyframes blink{50%{opacity:.35}}
+.exLine{font-size:14.5px;line-height:1.85;color:#d3deff;font-weight:300;white-space:pre-line;padding-left:14px;
+  border-left:2px solid rgba(0,229,255,.35);margin:6px 0;animation:exIn .5s var(--ease) both}
+@keyframes exIn{from{opacity:0;transform:translateX(-12px)}to{opacity:1;transform:none}}
+.verdict{display:inline-flex;align-items:center;gap:9px;padding:8px 16px;border-radius:999px;font-weight:600;font-size:14px;margin-bottom:12px}
+.verdict.good{background:rgba(0,255,163,.15);color:var(--c4);border:1px solid var(--c4)}
+.verdict.bad{background:rgba(255,77,109,.14);color:var(--bad);border:1px solid var(--bad)}
+.navRow{display:flex;gap:11px;margin-top:16px;flex-wrap:wrap}
+.navRow .btn{min-width:150px}
+/* ============ FLOATING SCORE ============ */
+.float{position:fixed;z-index:60;pointer-events:none;font-family:'Orbitron',sans-serif;font-size:26px;font-weight:900;
+  color:var(--c4);text-shadow:0 0 22px var(--c4);animation:floatUp 1.2s var(--ease) forwards}
+@keyframes floatUp{0%{opacity:0;transform:translate(-50%,0) scale(.6)}25%{opacity:1;transform:translate(-50%,-22px) scale(1.15)}
+100%{opacity:0;transform:translate(-50%,-92px) scale(.95)}}
+/* ============ RESULT ============ */
+.rankWrap{text-align:center;padding:30px 16px 8px;position:relative}
+.rankBadge{width:clamp(140px,40vw,182px);height:clamp(140px,40vw,182px);margin:0 auto;position:relative;display:grid;place-items:center}
+.rankBadge .halo{position:absolute;inset:-14%;border-radius:50%;background:conic-gradient(from 0deg,var(--c2),var(--c3),var(--c4),var(--c2));
+  filter:blur(22px);opacity:.75;animation:spin 7s linear infinite}
+.rankBadge .core{position:relative;width:100%;height:100%;border-radius:50%;display:grid;place-items:center;
+  background:radial-gradient(circle at 34% 28%,rgba(255,255,255,.22),rgba(5,6,15,.94) 62%);border:2px solid rgba(255,255,255,.28);
+  box-shadow:inset 0 0 44px rgba(0,229,255,.35)}
+.rankBadge .letter{font-family:'Orbitron',sans-serif;font-size:clamp(50px,15vw,74px);font-weight:900;
+  background:linear-gradient(120deg,#fff,var(--c2) 45%,var(--c3));-webkit-background-clip:text;background-clip:text;color:transparent;
+  animation:rankIn 1s var(--ease) both}
+@keyframes rankIn{0%{opacity:0;transform:scale(.3) rotate(-25deg);filter:blur(12px)}60%{transform:scale(1.14) rotate(4deg)}100%{opacity:1;transform:none;filter:none}}
+.rankTitle{font-size:clamp(20px,5.5vw,28px);font-weight:600;margin:16px 0 4px}
+.rankMsg{color:var(--muted);font-size:14px;font-weight:300;margin:0}
+.bigScore{font-family:'Orbitron',sans-serif;font-size:clamp(44px,14vw,76px);text-align:center;line-height:1;margin:18px 0 2px;
+  background:linear-gradient(120deg,var(--c4),#fff 40%,var(--c2));background-size:200% 100%;
+  -webkit-background-clip:text;background-clip:text;color:transparent;animation:shine 4s linear infinite}
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(138px,1fr));gap:11px;margin-top:22px}
+.tile{padding:16px 14px;border-radius:16px;border:1px solid var(--stroke);background:rgba(255,255,255,.045);text-align:center;
+  animation:rise .6s var(--ease) both}
+.tile b{display:block;font-family:'Orbitron',sans-serif;font-size:23px;margin-bottom:5px}
+.tile span{font-size:11.5px;color:var(--muted);letter-spacing:.6px}
+.donutWrap{display:flex;align-items:center;gap:20px;flex-wrap:wrap;justify-content:center;margin-top:24px}
+.donut{width:150px;height:150px;position:relative;flex:none}
+.donut svg{width:100%;height:100%;transform:rotate(-90deg)}
+.donut .dv{position:absolute;inset:0;display:grid;place-items:center;font-family:'Orbitron',sans-serif;font-size:25px}
+.topicBar{margin-top:12px}
+.tbRow{margin-bottom:12px}
+.tbTop{display:flex;justify-content:space-between;font-size:13px;margin-bottom:5px;gap:10px}
+.tbTop b{font-weight:500}.tbTop span{color:var(--muted);font-size:12px;flex:none}
+.tbBar{height:9px;border-radius:99px;background:rgba(255,255,255,.08);overflow:hidden}
+.tbBar i{display:block;height:100%;width:0;border-radius:99px;background:linear-gradient(90deg,var(--c3),var(--c2),var(--c4));
+  transition:width 1.1s var(--ease)}
+.rev{margin-top:12px;border-radius:14px;border:1px solid var(--stroke);overflow:hidden;background:rgba(255,255,255,.03)}
+.revHead{padding:13px 15px;cursor:pointer;display:flex;gap:10px;align-items:center;font-size:14px}
+.revHead .n{font-family:'Orbitron',sans-serif;color:var(--bad);font-size:12px}
+.revBody{max-height:0;overflow:hidden;transition:max-height .5s var(--ease);padding:0 15px}
+.rev.open .revBody{max-height:1200px;padding:0 15px 15px}
+.revQ{font-size:14px;line-height:1.7;white-space:pre-line;margin:0 0 8px;color:#e6edff}
+.revA{font-size:13px;color:var(--c4);margin:0 0 4px}
+.revB{font-size:13px;color:var(--bad);margin:0 0 8px}
+.revE{font-size:12.5px;color:var(--muted);white-space:pre-line;line-height:1.75;font-weight:300}
+/* ============ TOUR ============ */
+#tour{position:fixed;inset:0;z-index:90;display:none}
+#tour.on{display:block}
+#spot{position:absolute;border-radius:18px;box-shadow:0 0 0 9999px rgba(3,4,12,.84),0 0 0 2px var(--c2),0 0 40px var(--c2);
+  transition:all .62s var(--ease);pointer-events:none}
+#spot::after{content:'';position:absolute;inset:-6px;border-radius:22px;border:2px solid var(--c2);opacity:.6;animation:ping 1.6s ease-out infinite}
+@keyframes ping{0%{transform:scale(1);opacity:.65}100%{transform:scale(1.12);opacity:0}}
+#tip{position:absolute;left:50%;transform:translateX(-50%);width:min(520px,calc(100vw - 32px));padding:20px;border-radius:20px;
+  transition:top .6s var(--ease),bottom .6s var(--ease)}
+#tip .step{font-family:'Orbitron',sans-serif;font-size:11px;letter-spacing:2px;color:var(--c2);margin-bottom:7px}
+#tip h4{margin:0 0 8px;font-size:19px;font-weight:600}
+#tip p{margin:0;font-size:14px;line-height:1.8;color:#cfdcff;font-weight:300}
+#tip .tipBtns{display:flex;gap:9px;margin-top:16px}
+#tip .tipBtns .btn{padding:12px 18px;font-size:14px;min-width:0}
+.tipAnim{animation:tipIn .55s var(--ease) both}
+@keyframes tipIn{from{opacity:0;transform:translateY(16px) scale(.96)}to{opacity:1;transform:none}}
+/* ============ MISC ============ */
+#confetti{position:fixed;inset:0;z-index:70;pointer-events:none}
+#toast{position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom) + 24px);transform:translate(-50%,120%);z-index:95;
+  padding:13px 22px;border-radius:999px;background:rgba(10,14,32,.92);border:1px solid var(--c2);color:#fff;font-size:14px;
+  backdrop-filter:blur(10px);transition:transform .5s var(--ease);max-width:calc(100vw - 32px);text-align:center}
+#toast.on{transform:translate(-50%,0)}
+.footer{text-align:center;color:var(--muted);font-size:11.5px;margin-top:26px;font-weight:300;line-height:1.9}
+body.paused .screen{filter:blur(6px) brightness(.6)}
+#pauseVeil{position:fixed;inset:0;z-index:80;display:none;place-items:center;text-align:center}
+#pauseVeil.on{display:grid}
+#pauseVeil h2{font-family:'Orbitron',sans-serif;font-size:clamp(28px,9vw,50px);margin:0 0 8px;color:var(--c2);animation:blink 2s infinite}
+@media(prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.08s!important}}
+@media(max-width:480px){.hud{gap:9px;padding:10px}.hudTimer{width:54px;height:54px}.ibtn{width:34px;height:34px;font-size:13px}}
+</style>
+</head>
+<body>
+
+<div id="fx">
+  <canvas id="stars"></canvas>
+  <div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div>
+  <div class="gridfloor"></div><div class="vignette"></div>
+</div>
+
+<!-- ================= HOME ================= -->
+<section class="screen on" id="scHome">
+  <div class="wrap">
+    <div class="hero">
+      <div class="mark">
+        <svg viewBox="0 0 100 100" fill="none">
+          <circle class="ringA" cx="50" cy="50" r="38" stroke="#00E5FF" stroke-width="2" stroke-dasharray="26 14" opacity=".85"/>
+          <circle class="ringB" cx="50" cy="50" r="27" stroke="#FF2E93" stroke-width="2" stroke-dasharray="14 10" opacity=".85"/>
+          <circle cx="50" cy="50" r="13" fill="url(#gg)"/>
+          <defs><linearGradient id="gg" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#00FFA3"/><stop offset="1" stop-color="#6C5CE7"/></linearGradient></defs>
+        </svg>
+      </div>
+      <h1 class="title">QUIZ NOVA</h1>
+      <p class="sub">คณิตศาสตร์ · ตรรกศาสตร์ · ชีววิทยา — ม.4 เทอม 1</p>
+      <div class="chips">
+        <span class="chip">∞ ข้อไม่จำกัด</span>
+        <span class="chip">⏱ 40 นาที</span>
+        <span class="chip">🧠 เฉลยทุกข้อ</span>
+        <span class="chip">📱 ทุกอุปกรณ์</span>
+      </div>
+    </div>
+
+    <div class="sectionLabel">เลือกวิชา</div>
+    <div class="subjects" id="subjectGrid">
+      <button class="sbj sel" data-sbj="math" style="--pc:#00E5FF">
+        <span class="tick">✓</span><div class="ic">📐</div>
+        <h3>คณิตศาสตร์ + ตรรกศาสตร์</h3>
+        <p>เซต · ตรรกศาสตร์ · จำนวนจริง · ตรรกะเชิงวิเคราะห์ — สุ่มตัวเลขใหม่ทุกข้อ</p>
+      </button>
+      <button class="sbj" data-sbj="bio" style="--pc:#00FFA3">
+        <span class="tick">✓</span><div class="ic">🧬</div>
+        <h3>ชีววิทยา</h3>
+        <p>การศึกษาชีววิทยา · เคมีพื้นฐานของชีวิต · เซลล์และการแบ่งเซลล์</p>
+      </button>
+      <button class="sbj" data-sbj="mix" style="--pc:#FF2E93">
+        <span class="tick">✓</span><div class="ic">🌠</div>
+        <h3>โหมดรวมทุกวิชา</h3>
+        <p>สลับคณิต–ตรรกะ–ชีวะแบบสุ่ม ฝึกสมองสองซีกพร้อมกัน</p>
+      </button>
+    </div>
+
+    <div class="sectionLabel">ระดับความยาก</div>
+    <div class="pills" id="diffRow">
+      <button class="pill" data-d="1">🌱 ง่าย</button>
+      <button class="pill" data-d="2">⚡ ปานกลาง</button>
+      <button class="pill" data-d="3">🔥 ท้าทาย</button>
+      <button class="pill sel" data-d="all">🎲 คละทุกระดับ</button>
+    </div>
+
+    <div class="sectionLabel">เวลาทำข้อสอบ</div>
+    <div class="pills" id="timeRow">
+      <button class="pill" data-t="10">10 นาที</button>
+      <button class="pill" data-t="20">20 นาที</button>
+      <button class="pill sel" data-t="40">40 นาที</button>
+      <button class="pill" data-t="60">60 นาที</button>
+    </div>
+
+    <div class="actions">
+      <button class="btn" id="btnStart">🚀 เริ่มทำข้อสอบ</button>
+      <button class="btn ghost" id="btnTour">🎬 ทัวร์แอนิเมชัน · ตัวนี้คืออะไร?</button>
+      <button class="btn ghost" id="btnSound" style="flex:0 0 auto;min-width:58px">🔊</button>
+    </div>
+
+    <p class="footer">กด <b>1–4</b> เพื่อตอบ · <b>Enter / Space</b> ข้อถัดไป · <b>P</b> หยุดชั่วคราว<br>
+    ระบบสุ่มโจทย์จากเครื่องกำเนิดโจทย์ทางคณิตศาสตร์และคลังความรู้ชีววิทยา ทำได้ไม่จำกัดข้อจนกว่าเวลาจะหมด</p>
+  </div>
+</section>
+
+<!-- ================= QUIZ ================= -->
+<section class="screen" id="scQuiz">
+  <div class="wrap">
+    <div class="hud glass" id="hud">
+      <div class="hudTimer" id="hudTimer">
+        <svg viewBox="0 0 100 100">
+          <defs><linearGradient id="tg" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#00FFA3"/><stop offset="1" stop-color="#00E5FF"/></linearGradient></defs>
+          <circle class="bgr" cx="50" cy="50" r="42" fill="none" stroke-width="7"/>
+          <circle class="fgr" id="ring" cx="50" cy="50" r="42" fill="none" stroke-width="7"/>
+        </svg>
+        <div class="tval" id="tval">40:00</div>
+      </div>
+      <div class="hudMid" id="comboWrap">
+        <div class="hudRow">
+          <span class="lvl">LV <b id="lvl">1</b></span>
+          <span class="comboTxt" id="comboTxt">COMBO ×1</span>
+        </div>
+        <div class="bar"><i id="xpBar"></i></div>
+      </div>
+      <div class="hudScore" id="hudScore"><b id="scoreVal">0</b><span>SCORE</span></div>
+      <div class="iconRow">
+        <button class="ibtn" id="btnPause" title="หยุดชั่วคราว">⏸</button>
+        <button class="ibtn" id="btnEnd" title="จบการทดสอบ">🏁</button>
+      </div>
+    </div>
+
+    <div class="qcard glass in" id="qCard">
+      <span class="brk tl"></span><span class="brk tr"></span><span class="brk bl"></span><span class="brk br"></span>
+      <div class="qmeta">
+        <span class="tag sub" id="tagSub">คณิตศาสตร์</span>
+        <span class="tag d1" id="tagTopic">เซต</span>
+        <span class="tag" id="tagDiff">ง่าย</span>
+        <span class="qno" id="qNo">ข้อที่ 1</span>
+      </div>
+      <p class="qtext" id="qText">กำลังโหลด…</p>
+      <div class="choices" id="choices"></div>
+
+      <div class="explain" id="explain">
+        <div id="verdictBox"></div>
+        <div class="exHead"><span class="dot"></span><span>วิธีคิดทีละขั้น</span></div>
+        <div id="exBody"></div>
+      </div>
+
+      <div class="navRow">
+        <button class="btn" id="btnNext">ข้อถัดไป →</button>
+        <button class="btn ghost" id="btnSkip" style="flex:0 0 auto;min-width:130px">ข้ามข้อนี้</button>
+      </div>
+    </div>
+    <p class="footer">ทำไปเรื่อย ๆ ได้ไม่จำกัด — ระบบจะสรุปผลอลังการให้เมื่อหมดเวลาหรือกดธงจบ 🏁</p>
+  </div>
+</section>
+
+<!-- ================= RESULT ================= -->
+<section class="screen" id="scResult">
+  <div class="wrap">
+    <div class="rankWrap">
+      <div class="rankBadge"><div class="halo"></div><div class="core"><span class="letter" id="rankLetter">S</span></div></div>
+      <h2 class="rankTitle" id="rankTitle">ยอดเยี่ยม!</h2>
+      <p class="rankMsg" id="rankMsg">—</p>
+      <div class="bigScore" id="finalScore">0</div>
+      <p class="sub" style="margin-top:0">คะแนนรวม</p>
+    </div>
+
+    <div class="donutWrap">
+      <div class="donut">
+        <svg viewBox="0 0 120 120">
+          <circle cx="60" cy="60" r="48" fill="none" stroke="rgba(255,255,255,.1)" stroke-width="12"/>
+          <circle id="donutFg" cx="60" cy="60" r="48" fill="none" stroke="url(#tg2)" stroke-width="12" stroke-linecap="round"
+                  stroke-dasharray="301.6" stroke-dashoffset="301.6" style="transition:stroke-dashoffset 1.4s cubic-bezier(.22,.9,.25,1)"/>
+          <defs><linearGradient id="tg2" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#00FFA3"/><stop offset=".5" stop-color="#00E5FF"/><stop offset="1" stop-color="#FF2E93"/></linearGradient></defs>
+        </svg>
+        <div class="dv" id="accVal">0%</div>
+      </div>
+      <div style="flex:1;min-width:240px">
+        <div class="tiles" style="margin-top:0">
+          <div class="tile"><b id="tCorrect" style="color:var(--c4)">0</b><span>ตอบถูก</span></div>
+          <div class="tile"><b id="tWrong" style="color:var(--bad)">0</b><span>ตอบผิด</span></div>
+          <div class="tile"><b id="tStreak" style="color:var(--warn)">0</b><span>คอมโบสูงสุด</span></div>
+          <div class="tile"><b id="tSpeed" style="color:var(--c2)">0</b><span>ข้อ / นาที</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sectionLabel">สถิติรายหัวข้อ</div>
+    <div class="glass" style="padding:18px"><div class="topicBar" id="topicBars"></div></div>
+
+    <div class="sectionLabel">ทบทวนข้อที่ตอบผิด</div>
+    <div id="reviewList"></div>
+
+    <div class="actions">
+      <button class="btn" id="btnAgain">🔁 ทำอีกรอบ</button>
+      <button class="btn ghost" id="btnHome">🏠 กลับหน้าแรก</button>
+      <button class="btn ghost" id="btnCopy">📋 คัดลอกสรุปผล</button>
+    </div>
+    <p class="footer">เก็บสถิติไว้ในเครื่องคุณเท่านั้น · ทำซ้ำได้ไม่จำกัด โจทย์จะไม่ซ้ำเดิม</p>
+  </div>
+</section>
+
+<div id="pauseVeil"><div><h2>PAUSED</h2><p class="sub">กด <b>P</b> หรือปุ่ม ▶ เพื่อไปต่อ</p>
+  <button class="btn" id="btnResume" style="margin-top:14px">▶ เล่นต่อ</button></div></div>
+
+<canvas id="confetti"></canvas>
+<div id="tour"><div id="spot"></div>
+  <div id="tip" class="glass">
+    <div class="step" id="tipStep">STEP 1 / 8</div>
+    <h4 id="tipTitle">—</h4><p id="tipDesc">—</p>
+    <div class="tipBtns">
+      <button class="btn" id="tipNext">ถัดไป →</button>
+      <button class="btn ghost" id="tipPrev">← ย้อนกลับ</button>
+      <button class="btn ghost" id="tipSkip">ข้าม</button>
+    </div>
+  </div>
+</div>
+<div id="toast"></div>
+
+<script>
+/* =================================================================
+   QUIZ NOVA ∞  —  single-file quiz engine
+   ================================================================= */
+'use strict';
+const $=s=>document.querySelector(s), $$=s=>Array.from(document.querySelectorAll(s));
+const R=n=>Math.floor(Math.random()*n), rint=(a,b)=>a+R(b-a+1), pick=a=>a[R(a.length)];
+function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=R(i+1);[a[i],a[j]]=[a[j],a[i]];}return a;}
+const fmtTime=s=>{s=Math.max(0,Math.ceil(s));return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0');};
+const TV=v=>v?'จริง':'เท็จ';
+
+/* ---------- SOUND (WebAudio, no files) ---------- */
+let AC=null, soundOn=true;
+function ac(){ if(!AC){ try{AC=new (window.AudioContext||window.webkitAudioContext)();}catch(e){} } return AC; }
+function beep(f,d,type,vol,delay){
+  if(!soundOn) return; const c=ac(); if(!c) return;
+  const t=c.currentTime+(delay||0), o=c.createOscillator(), g=c.createGain();
+  o.type=type||'sine'; o.frequency.setValueAtTime(f,t);
+  g.gain.setValueAtTime(0,t); g.gain.linearRampToValueAtTime(vol||.12,t+.015);
+  g.gain.exponentialRampToValueAtTime(.0001,t+d);
+  o.connect(g); g.connect(c.destination); o.start(t); o.stop(t+d+.05);
+}
+const SFX={
+  tap:()=>beep(520,.07,'triangle',.06),
+  ok:()=>{beep(660,.12,'sine',.12,0);beep(880,.16,'sine',.12,.09);beep(1180,.22,'sine',.1,.19);},
+  no:()=>{beep(190,.22,'sawtooth',.09,0);beep(130,.3,'sawtooth',.08,.1);},
+  lvl:()=>{[523,659,784,1046].forEach((f,i)=>beep(f,.18,'triangle',.1,i*.08));},
+  end:()=>{[523,659,784,1046,1318].forEach((f,i)=>beep(f,.4,'sine',.11,i*.13));},
+  tick:()=>beep(1000,.05,'square',.04)
+};
+
+/* ---------- STARFIELD ---------- */
+(function(){
+  const c=$('#stars'), x=c.getContext('2d'); let W,H,ps=[];
+  function rs(){W=c.width=innerWidth*devicePixelRatio;H=c.height=innerHeight*devicePixelRatio;
+    const n=Math.min(150,Math.floor(innerWidth*innerHeight/11000)); ps=[];
+    for(let i=0;i<n;i++)ps.push({x:Math.random()*W,y:Math.random()*H,z:Math.random()*.9+.1,r:Math.random()*1.6+.3,
+      c:pick(['#ffffff','#9ad8ff','#ffa8e0','#8affd4'])});}
+  function loop(){x.clearRect(0,0,W,H);
+    for(const p of ps){p.y-=p.z*.32*devicePixelRatio; if(p.y<0){p.y=H;p.x=Math.random()*W;}
+      x.globalAlpha=.25+p.z*.6; x.fillStyle=p.c; x.beginPath();
+      x.arc(p.x,p.y,p.r*p.z*devicePixelRatio,0,7); x.fill();}
+    requestAnimationFrame(loop);}
+  addEventListener('resize',rs); rs(); loop();
+})();
+
+/* ---------- CONFETTI ---------- */
+const Confetti=(function(){
+  const c=$('#confetti'), x=c.getContext('2d'); let ps=[], run=false;
+  function rs(){c.width=innerWidth*devicePixelRatio;c.height=innerHeight*devicePixelRatio;}
+  addEventListener('resize',rs); rs();
+  function burst(n,cx,cy,power){
+    cx=(cx==null?innerWidth/2:cx)*devicePixelRatio; cy=(cy==null?innerHeight*.35:cy)*devicePixelRatio;
+    const cols=['#00E5FF','#FF2E93','#00FFA3','#FFB020','#6C5CE7','#ffffff'];
+    for(let i=0;i<n;i++){const a=Math.random()*Math.PI*2, s=(Math.random()*(power||13)+3)*devicePixelRatio;
+      ps.push({x:cx,y:cy,vx:Math.cos(a)*s,vy:Math.sin(a)*s-4*devicePixelRatio,g:.28*devicePixelRatio,
+        w:(Math.random()*9+4)*devicePixelRatio,h:(Math.random()*5+3)*devicePixelRatio,
+        col:pick(cols),rot:Math.random()*7,vr:(Math.random()-.5)*.35,life:1});}
+    if(!run){run=true;loop();}
+  }
+  function loop(){
+    x.clearRect(0,0,c.width,c.height); let alive=0;
+    for(const p of ps){ if(p.life<=0) continue; alive++;
+      p.vy+=p.g; p.x+=p.vx; p.y+=p.vy; p.vx*=.992; p.rot+=p.vr; p.life-=.0055;
+      x.save(); x.globalAlpha=Math.max(0,p.life); x.translate(p.x,p.y); x.rotate(p.rot);
+      x.fillStyle=p.col; x.fillRect(-p.w/2,-p.h/2,p.w,p.h); x.restore(); }
+    if(alive>0) requestAnimationFrame(loop); else {run=false; ps=[]; x.clearRect(0,0,c.width,c.height);}
+  }
+  return {burst};
+})();
+
+/* =================================================================
+   QUESTION FACTORY
+   ================================================================= */
+function makeQ(o){
+  const correct=String(o.correct);
+  const seen=new Set([correct]); const wrong=[];
+  for(const w of (o.wrong||[])){ const s=String(w); if(!seen.has(s)){seen.add(s);wrong.push(s);} }
+  if(wrong.length<3) return null;
+  const four=shuffle([correct,...shuffle(wrong).slice(0,3)]);
+  return {subject:o.subject,topic:o.topic,diff:o.diff||1,q:o.q,choices:four,ans:four.indexOf(correct),explain:o.explain};
+}
+const setStr=a=>a.length?('{'+a.join(', ')+'}'):'∅';
+const uniqSet=n=>shuffle([1,2,3,4,5,6,7,8,9,10]).slice(0,n).sort((a,b)=>a-b);
+function sgn(n,first){ if(first) return (n<0?'−':'')+Math.abs(n); return (n<0?' − ':' + ')+Math.abs(n); }
+function polyStr(co){ // co = [a3,a2,a1,a0]
+  const p=['x³','x²','x','']; let s=''; let first=true;
+  for(let i=0;i<4;i++){ const v=co[i]; if(v===0) continue;
+    const av=Math.abs(v), t=p[i];
+    let part=(av===1&&i<3)?t:(av+t);
+    s+= first? (v<0?'−'+part:part) : (v<0?' − '+part:' + '+part);
+    first=false; }
+  return s||'0';
+}
+
+/* ======================= MATH GENERATORS ======================= */
+function gSetUnion(){
+  const a=rint(12,45),b=rint(10,40),i=rint(3,Math.min(a,b)-2), ans=a+b-i;
+  return makeQ({subject:'math',topic:'เซต',diff:1,
+    q:'กำหนดให้ n(A) = '+a+' , n(B) = '+b+' และ n(A ∩ B) = '+i+'\nจงหา n(A ∪ B)',
+    correct:ans, wrong:[a+b, a+b-2*i, Math.abs(a-b)+i, a+b+i],
+    explain:'สูตรนับสมาชิกของยูเนียน:\nn(A ∪ B) = n(A) + n(B) − n(A ∩ B)\nแทนค่า = '+a+' + '+b+' − '+i+' = '+ans+'\nที่ต้องลบ n(A∩B) เพราะสมาชิกที่อยู่ทั้งสองเซตถูกนับซ้ำ 2 ครั้ง'});
+}
+function gSetDiff(){
+  const a=rint(15,40), i=rint(4,12), ans=a-i;
+  return makeQ({subject:'math',topic:'เซต',diff:1,
+    q:'กำหนดให้ n(A) = '+a+' และ n(A ∩ B) = '+i+'\nจงหา n(A − B)',
+    correct:ans, wrong:[a+i,i,a,Math.abs(i-a)+1],
+    explain:'A − B คือสมาชิกที่อยู่ใน A แต่ไม่อยู่ใน B\nn(A − B) = n(A) − n(A ∩ B) = '+a+' − '+i+' = '+ans});
+}
+function gSetSubsets(){
+  const n=rint(3,6), els=uniqSet(n), mode=pick(['all','proper','power']);
+  const p2=Math.pow(2,n);
+  const data={
+    all:{q:'เซต A = '+setStr(els)+' มีสับเซตทั้งหมดกี่เซต', c:p2,
+      e:'เซตที่มีสมาชิก n ตัว จะมีสับเซตทั้งหมด 2ⁿ เซต\nที่นี่ n = '+n+' → 2^'+n+' = '+p2+' เซต'},
+    proper:{q:'เซต A = '+setStr(els)+' มีสับเซตแท้ (proper subset) กี่เซต', c:p2-1,
+      e:'สับเซตแท้ = สับเซตทั้งหมด − ตัวมันเอง\n= 2ⁿ − 1 = 2^'+n+' − 1 = '+(p2-1)+' เซต'},
+    power:{q:'เซต A = '+setStr(els)+' จงหา n(P(A)) เมื่อ P(A) คือเพาเวอร์เซตของ A', c:p2,
+      e:'เพาเวอร์เซตคือเซตของสับเซตทั้งหมด\nn(P(A)) = 2^n(A) = 2^'+n+' = '+p2}
+  }[mode];
+  return makeQ({subject:'math',topic:'เซต',diff:mode==='all'?1:2,q:data.q,correct:data.c,
+    wrong:[p2-1,p2+1,n*2,Math.pow(2,n-1),Math.pow(2,n)+n].filter(v=>v!==data.c),explain:data.e});
+}
+function gSetOps(){
+  const A=uniqSet(rint(4,5)), B=uniqSet(rint(4,5)), op=pick(['∩','∪','−']);
+  const inter=A.filter(x=>B.includes(x)), uni=Array.from(new Set(A.concat(B))).sort((a,b)=>a-b);
+  const dif=A.filter(x=>!B.includes(x)), dif2=B.filter(x=>!A.includes(x));
+  const res= op==='∩'?inter : op==='∪'?uni : dif;
+  const exp={'∩':'A ∩ B คือสมาชิกที่อยู่ใน A และ B พร้อมกัน','∪':'A ∪ B คือสมาชิกที่อยู่ใน A หรือ B (นับตัวซ้ำเพียงครั้งเดียว)',
+    '−':'A − B คือสมาชิกที่อยู่ใน A แต่ไม่อยู่ใน B'}[op];
+  return makeQ({subject:'math',topic:'เซต',diff:2,
+    q:'กำหนดให้  A = '+setStr(A)+'\n            B = '+setStr(B)+'\nจงหา  A '+op+' B',
+    correct:setStr(res), wrong:[setStr(inter),setStr(uni),setStr(dif),setStr(dif2),
+      setStr(dif.concat(dif2).sort((a,b)=>a-b))],
+    explain:exp+'\nA = '+setStr(A)+' , B = '+setStr(B)+'\nได้ผลลัพธ์ = '+setStr(res)});
+}
+function gSetWord(){
+  const names=pick([['ดนตรี','กีฬา'],['ภาษาอังกฤษ','ภาษาจีน'],['ฟุตบอล','บาสเกตบอล'],['วิทย์','คณิต']]);
+  const tot=rint(40,60), a=rint(18,32), b=rint(15,30), i=rint(5,12);
+  const both=a+b-i, none=tot-both;
+  if(none<1||i>Math.min(a,b)) return null;
+  return makeQ({subject:'math',topic:'เซต',diff:2,
+    q:'ห้องเรียนหนึ่งมีนักเรียน '+tot+' คน ชอบ'+names[0]+' '+a+' คน ชอบ'+names[1]+' '+b+' คน และชอบทั้งสองอย่าง '+i+' คน\nนักเรียนที่ไม่ชอบทั้งสองอย่างมีกี่คน',
+    correct:none, wrong:[tot-a-b, both, i, tot-both+i, none+i],
+    explain:'ขั้นที่ 1 หาคนที่ชอบอย่างน้อยหนึ่งอย่าง\nn(A ∪ B) = '+a+' + '+b+' − '+i+' = '+both+' คน\nขั้นที่ 2 คนที่ไม่ชอบเลย = ทั้งหมด − n(A ∪ B)\n= '+tot+' − '+both+' = '+none+' คน'});
+}
+const IMP=(a,b)=>(!a)||b, IFF=(a,b)=>a===b;
+const FORMS=[
+  {t:'(p ∧ q) ∨ ~r', f:(p,q,r)=>(p&&q)||!r},
+  {t:'(p ∨ q) → r', f:(p,q,r)=>IMP(p||q,r)},
+  {t:'~p → (q ∧ r)', f:(p,q,r)=>IMP(!p,q&&r)},
+  {t:'(p ∧ ~q) → r', f:(p,q,r)=>IMP(p&&!q,r)},
+  {t:'~(p ∨ q) ∨ r', f:(p,q,r)=>(!(p||q))||r},
+  {t:'(p ↔ q) ∧ (q → r)', f:(p,q,r)=>IFF(p,q)&&IMP(q,r)},
+  {t:'~(p → q) ∨ (r ∧ p)', f:(p,q,r)=>(!IMP(p,q))||(r&&p)},
+  {t:'(p → q) ∧ (~q ∨ r)', f:(p,q,r)=>IMP(p,q)&&(!q||r)},
+  {t:'~p ∨ (q ↔ r)', f:(p,q,r)=>(!p)||IFF(q,r)},
+  {t:'(p ∨ ~q) → (q ∧ r)', f:(p,q,r)=>IMP(p||!q,q&&r)},
+  {t:'~(q ∧ r) → p', f:(p,q,r)=>IMP(!(q&&r),p)},
+  {t:'(p → ~q) ↔ r', f:(p,q,r)=>IFF(IMP(p,!q),r)},
+  {t:'(~p ∧ q) ∨ (p ∧ r)', f:(p,q,r)=>((!p)&&q)||(p&&r)},
+  {t:'p ↔ (q ∨ ~r)', f:(p,q,r)=>IFF(p,q||!r)}
+];
+function gLogicTruth(){
+  for(let k=0;k<40;k++){
+    const P=Math.random()<.5,Q=Math.random()<.5,Rv=Math.random()<.5;
+    const ev=FORMS.map(f=>({t:f.t,v:f.f(P,Q,Rv)}));
+    const T=ev.filter(e=>e.v), F=ev.filter(e=>!e.v);
+    const askTrue=Math.random()<.5;
+    const head='กำหนดให้ p มีค่าความจริงเป็น '+TV(P)+' , q เป็น '+TV(Q)+' และ r เป็น '+TV(Rv)+'\n';
+    const tip='\n\nตัวช่วยจำ: p → q เป็นเท็จกรณีเดียวคือ จริง → เท็จ | p ↔ q จริงเมื่อค่าความจริงเหมือนกัน';
+    if(askTrue&&T.length>=1&&F.length>=3){
+      const c=pick(T);
+      return makeQ({subject:'math',topic:'ตรรกศาสตร์',diff:2,
+        q:head+'ข้อใดมีค่าความจริงเป็น "จริง"',correct:c.t,wrong:shuffle(F).slice(0,3).map(e=>e.t),
+        explain:'แทนค่า p='+TV(P)+', q='+TV(Q)+', r='+TV(Rv)+' ลงในแต่ละตัวเลือก\nมีเพียง  '+c.t+'  ที่ให้ค่าความจริงเป็นจริง'+tip});
+    }
+    if(!askTrue&&F.length>=1&&T.length>=3){
+      const c=pick(F);
+      return makeQ({subject:'math',topic:'ตรรกศาสตร์',diff:2,
+        q:head+'ข้อใดมีค่าความจริงเป็น "เท็จ"',correct:c.t,wrong:shuffle(T).slice(0,3).map(e=>e.t),
+        explain:'แทนค่า p='+TV(P)+', q='+TV(Q)+', r='+TV(Rv)+' ลงในแต่ละตัวเลือก\nมีเพียง  '+c.t+'  ที่ให้ค่าความจริงเป็นเท็จ'+tip});
+    }
+  }
+  return null;
+}
+const NEGS=[
+  {a:'p ∧ q', n:'~p ∨ ~q', e:'กฎเดอมอร์แกน: ~(p ∧ q) ≡ ~p ∨ ~q'},
+  {a:'p ∨ q', n:'~p ∧ ~q', e:'กฎเดอมอร์แกน: ~(p ∨ q) ≡ ~p ∧ ~q'},
+  {a:'p → q', n:'p ∧ ~q', e:'เพราะ p → q ≡ ~p ∨ q ดังนั้นนิเสธคือ p ∧ ~q'},
+  {a:'p ↔ q', n:'(p ∧ ~q) ∨ (q ∧ ~p)', e:'นิเสธของ ↔ คือกรณีที่ค่าความจริงต่างกัน'},
+  {a:'∀x[P(x)]', n:'∃x[~P(x)]', e:'นิเสธของ "ทุกตัว" คือ "มีอย่างน้อยหนึ่งตัวที่ไม่"'},
+  {a:'∃x[P(x)]', n:'∀x[~P(x)]', e:'นิเสธของ "มีบางตัว" คือ "ทุกตัวไม่"'},
+  {a:'∀x[P(x) → Q(x)]', n:'∃x[P(x) ∧ ~Q(x)]', e:'เปลี่ยน ∀→∃ แล้วทำนิเสธข้อความข้างใน'},
+  {a:'~p ∨ q', n:'p ∧ ~q', e:'เดอมอร์แกน: ~(~p ∨ q) ≡ p ∧ ~q'}
+];
+function gLogicNeg(){
+  const c=pick(NEGS), w=shuffle(NEGS.filter(x=>x.n!==c.n)).slice(0,3).map(x=>x.n);
+  return makeQ({subject:'math',topic:'ตรรกศาสตร์',diff:2,
+    q:'ข้อใดคือนิเสธของประพจน์  ' + c.a,correct:c.n,wrong:w.concat([c.a]),
+    explain:c.e+'\nดังนั้น ~('+c.a+') ≡ '+c.n});
+}
+const EQVS=[
+  {a:'p → q', e:'~p ∨ q', w:['p ∨ ~q','~p ∧ q','q → p'], x:'นิยามของเงื่อนไข: p → q ≡ ~p ∨ q'},
+  {a:'p → q', e:'~q → ~p', w:['q → p','~p → ~q','p ∧ ~q'], x:'ข้อความแย้งสลับที่ (contrapositive) สมมูลกับประพจน์เดิมเสมอ'},
+  {a:'~(p ∧ q)', e:'~p ∨ ~q', w:['~p ∧ ~q','p ∨ q','p → q'], x:'กฎเดอมอร์แกน'},
+  {a:'~(p ∨ q)', e:'~p ∧ ~q', w:['~p ∨ ~q','p ∧ q','q → p'], x:'กฎเดอมอร์แกน'},
+  {a:'p ↔ q', e:'(p → q) ∧ (q → p)', w:['(p → q) ∨ (q → p)','p ∧ q','~p ∨ q'], x:'ประพจน์ ↔ คือเงื่อนไขสองทาง'},
+  {a:'p ∨ (p ∧ q)', e:'p', w:['q','p ∧ q','p ∨ q'], x:'กฎการดูดกลืน (absorption): p ∨ (p ∧ q) ≡ p'},
+  {a:'p ∧ (p ∨ q)', e:'p', w:['q','p ∨ q','p ∧ q'], x:'กฎการดูดกลืน: p ∧ (p ∨ q) ≡ p'},
+  {a:'~(~p)', e:'p', w:['~p','p ∧ ~p','p ∨ ~p'], x:'กฎนิเสธซ้อน'}
+];
+function gLogicEquiv(){
+  const c=pick(EQVS);
+  return makeQ({subject:'math',topic:'ตรรกศาสตร์',diff:2,
+    q:'ข้อใดสมมูลกับ  '+c.a,correct:c.e,wrong:c.w,explain:c.x+'\nจึงได้ '+c.a+' ≡ '+c.e});
+}
+const TAUS=[
+  {t:'p ∨ ~p', v:1,e:'กฎการยกเว้นกลาง — จริงเสมอ'},
+  {t:'~(p ∧ ~p)', v:1,e:'ข้อขัดแย้งเป็นเท็จเสมอ นิเสธจึงจริงเสมอ'},
+  {t:'(p ∧ q) → p', v:1,e:'ถ้า p และ q จริงพร้อมกัน ย่อมได้ p จริง'},
+  {t:'p → (p ∨ q)', v:1,e:'ถ้า p จริง p ∨ q ย่อมจริง'},
+  {t:'((p → q) ∧ p) → q', v:1,e:'Modus Ponens — เป็นสัจนิรันดร์'},
+  {t:'((p → q) ∧ ~q) → ~p', v:1,e:'Modus Tollens — เป็นสัจนิรันดร์'},
+  {t:'(p → q) ↔ (~q → ~p)', v:1,e:'ประพจน์กับข้อความแย้งสลับที่สมมูลกันเสมอ'},
+  {t:'((p ∨ q) ∧ ~p) → q', v:1,e:'Disjunctive Syllogism'},
+  {t:'p → ~p', v:0}, {t:'(p ∨ q) → p', v:0}, {t:'p ↔ ~p', v:0},
+  {t:'(p → q) → (q → p)', v:0}, {t:'(p ∨ q) ∧ (~p ∧ ~q)', v:0}, {t:'p ∧ ~p', v:0}
+];
+function gTautology(){
+  const T=TAUS.filter(t=>t.v), F=TAUS.filter(t=>!t.v), c=pick(T);
+  return makeQ({subject:'math',topic:'ตรรกศาสตร์',diff:3,
+    q:'ข้อใดเป็น "สัจนิรันดร์" (tautology)',correct:c.t,wrong:shuffle(F).slice(0,3).map(x=>x.t),
+    explain:'สัจนิรันดร์ = มีค่าความจริงเป็นจริงทุกกรณีในตารางค่าความจริง\nคำตอบคือ '+c.t+'\nเหตุผล: '+c.e+'\nวิธีตรวจเร็ว: สมมติให้ประพจน์ทั้งก้อนเป็นเท็จ ถ้าเกิดข้อขัดแย้ง แสดงว่าเป็นสัจนิรันดร์'});
+}
+const QUANTS=[
+  {t:'∀x [x + 2 > 3]', v:0, e:'x = 1 ให้ 3 > 3 ซึ่งเป็นเท็จ จึงไม่จริงทุกตัว'},
+  {t:'∃x [x² = 9]', v:1, e:'x = 3 ทำให้ 3² = 9 จริง'},
+  {t:'∀x [x² ≥ x]', v:1, e:'ทุก x ใน U ให้ x² ≥ x จริง (1²=1, 2²=4, …)'},
+  {t:'∃x [x + 5 = 6]', v:1, e:'x = 1 ทำให้เป็นจริง'},
+  {t:'∀x [x < 5]', v:0, e:'x = 5 ให้ 5 < 5 เป็นเท็จ'},
+  {t:'∃x [x² > 20]', v:1, e:'x = 5 ให้ 25 > 20 จริง'},
+  {t:'∀x [2x เป็นจำนวนคู่]', v:1, e:'2 คูณจำนวนเต็มใดย่อมเป็นจำนวนคู่เสมอ'},
+  {t:'∃x [x เป็นจำนวนคู่ และ x > 4]', v:0, e:'จำนวนคู่ใน U มีแค่ 2 กับ 4 ไม่มีตัวใดมากกว่า 4'},
+  {t:'∀x [x เป็นจำนวนเฉพาะ]', v:0, e:'x = 1 และ x = 4 ไม่ใช่จำนวนเฉพาะ'},
+  {t:'∃x [x³ = 8]', v:1, e:'x = 2 ให้ 2³ = 8 จริง'},
+  {t:'∀x [x ≠ 0]', v:1, e:'ไม่มีสมาชิกใดใน U เท่ากับ 0'},
+  {t:'∃x [x + 6 = 6]', v:0, e:'ต้องใช้ x = 0 ซึ่งไม่อยู่ใน U'}
+];
+function gQuant(){
+  const T=QUANTS.filter(q=>q.v), F=QUANTS.filter(q=>!q.v);
+  const askTrue=Math.random()<.5, c=askTrue?pick(T):pick(F), pool=askTrue?F:T;
+  return makeQ({subject:'math',topic:'ตรรกศาสตร์',diff:2,
+    q:'เอกภพสัมพัทธ์  U = {1, 2, 3, 4, 5}\nข้อใดมีค่าความจริงเป็น "'+(askTrue?'จริง':'เท็จ')+'"',
+    correct:c.t, wrong:shuffle(pool).slice(0,3).map(x=>x.t),
+    explain:'หลักการ: ∀ ต้องจริง "ทุกตัว" ใน U ส่วน ∃ ขอแค่ "มีอย่างน้อยหนึ่งตัว" ที่จริง\nคำตอบ '+c.t+' → '+c.e});
+}
+const ARGS=[
+  {n:'Modus Ponens (กฎการแจงผล)',p:['p → q','p'],c:'q',w:['~q','~p','p → q']},
+  {n:'Modus Tollens (กฎการปฏิเสธผล)',p:['p → q','~q'],c:'~p',w:['p','q','~q → p']},
+  {n:'Hypothetical Syllogism (ตรรกบทแบบสมมติ)',p:['p → q','q → r'],c:'p → r',w:['r → p','q → p','p ∧ r']},
+  {n:'Disjunctive Syllogism (ตรรกบทแบบเลือก)',p:['p ∨ q','~p'],c:'q',w:['p','~q','p ∧ q']},
+  {n:'Constructive Dilemma',p:['p → q','r → s','p ∨ r'],c:'q ∨ s',w:['q ∧ s','p ∨ s','~q ∨ ~s']}
+];
+function gLogicArg(){
+  const a=pick(ARGS);
+  return makeQ({subject:'math',topic:'การอ้างเหตุผล',diff:2,
+    q:'กำหนดเหตุดังนี้\n  ① '+a.p.join('\n  ② ').replace('②','②')+'\nข้อใดคือ "ผล" ที่ทำให้การอ้างเหตุผลนี้สมเหตุสมผล',
+    correct:a.c,wrong:a.w,
+    explain:'รูปแบบนี้คือ '+a.n+'\nเหตุ: '+a.p.join(' , ')+'\nผลที่สมเหตุสมผลคือ '+a.c+'\nตรวจสอบได้โดยสร้าง (เหตุทั้งหมด ∧) → ผล แล้วดูว่าเป็นสัจนิรันดร์หรือไม่'});
+}
+function gLogicThai(){
+  const S=[
+    {p:['ถ้าฝนตก แล้วถนนเปียก','ฝนตก'],c:'ถนนเปียก',w:['ถนนไม่เปียก','ฝนไม่ตก','ถ้าถนนเปียก แล้วฝนตก'],n:'Modus Ponens'},
+    {p:['ถ้าสมชายขยัน แล้วสมชายสอบผ่าน','สมชายสอบไม่ผ่าน'],c:'สมชายไม่ขยัน',w:['สมชายขยัน','สมชายสอบผ่าน','สมชายอาจขยัน'],n:'Modus Tollens'},
+    {p:['ถ้าน้ำเดือด แล้วอุณหภูมิถึง 100 °C','ถ้าอุณหภูมิถึง 100 °C แล้วเกิดไอน้ำ'],c:'ถ้าน้ำเดือด แล้วเกิดไอน้ำ',
+     w:['ถ้าเกิดไอน้ำ แล้วน้ำเดือด','น้ำไม่เดือด','เกิดไอน้ำเสมอ'],n:'ตรรกบทแบบสมมติ'},
+    {p:['มานีไปเชียงใหม่ หรือ มานีไปภูเก็ต','มานีไม่ได้ไปเชียงใหม่'],c:'มานีไปภูเก็ต',
+     w:['มานีไปเชียงใหม่','มานีไม่ได้ไปภูเก็ต','มานีไปทั้งสองที่'],n:'ตรรกบทแบบเลือก'}
+  ];
+  const a=pick(S);
+  return makeQ({subject:'math',topic:'การอ้างเหตุผล',diff:1,
+    q:'จากเหตุต่อไปนี้\n  • '+a.p.join('\n  • ')+'\nข้อสรุปใดสมเหตุสมผล',
+    correct:a.c,wrong:a.w,explain:'รูปแบบการอ้างเหตุผล: '+a.n+'\nจึงสรุปได้ว่า “'+a.c+'”\nข้อควรระวัง: การสลับเหตุกับผล (q → p) ไม่สมเหตุสมผล'});
+}
+function gFactor(){
+  let p=0,q=0; while(p===0)p=rint(-6,6); while(q===0)q=rint(-6,6);
+  const b=p+q, c=p*q;
+  const f=(m,n)=>'(x'+(m>=0?' + ':' − ')+Math.abs(m)+')(x'+(n>=0?' + ':' − ')+Math.abs(n)+')';
+  return makeQ({subject:'math',topic:'จำนวนจริง',diff:1,
+    q:'จงแยกตัวประกอบของพหุนาม\n  x²'+sgn(b)+'x'+sgn(c),
+    correct:f(p,q),wrong:[f(-p,q),f(p,-q),f(-p,-q),f(p+1,q)],
+    explain:'หาจำนวนสองจำนวนที่ "คูณกันได้ '+c+'" และ "บวกกันได้ '+b+'"\nได้แก่ '+p+' และ '+q+'\nจึงแยกตัวประกอบเป็น '+f(p,q)+'\nตรวจคำตอบ: กระจายกลับได้ x²'+sgn(b)+'x'+sgn(c)});
+}
+function gQuadRoots(){
+  let r1=rint(-6,6), r2=rint(-6,6); if(r1>r2){const t=r1;r1=r2;r2=t;}
+  const b=-(r1+r2), c=r1*r2;
+  const S=(a,bb)=>'x = '+a+' หรือ x = '+bb;
+  return makeQ({subject:'math',topic:'จำนวนจริง',diff:2,
+    q:'จงแก้สมการ\n  x²'+sgn(b)+'x'+sgn(c)+' = 0',
+    correct:S(r1,r2),wrong:[S(-r1,-r2),S(r1,-r2),S(-r1,r2),S(r1+1,r2-1)],
+    explain:'แยกตัวประกอบเป็น (x'+(-r1>=0?' + ':' − ')+Math.abs(r1)+')(x'+(-r2>=0?' + ':' − ')+Math.abs(r2)+') = 0\nใช้สมบัติว่า ถ้า AB = 0 แล้ว A = 0 หรือ B = 0\nจึงได้ '+S(r1,r2)});
+}
+function gRemainder(){
+  const a=rint(1,3),b=rint(-5,5),c=rint(-6,6),d=rint(-8,8),k=rint(-3,3);
+  const P=x=>a*x*x*x+b*x*x+c*x+d, ans=P(k);
+  const div='(x'+(k>=0?' − ':' + ')+Math.abs(k)+')';
+  return makeQ({subject:'math',topic:'จำนวนจริง',diff:3,
+    q:'กำหนดให้  P(x) = '+polyStr([a,b,c,d])+'\nเมื่อหาร P(x) ด้วย '+div+' จะเหลือเศษเท่าใด',
+    correct:ans,wrong:[P(-k),ans+k,d,-ans,ans+1],
+    explain:'ทฤษฎีบทเศษเหลือ: หาร P(x) ด้วย (x − k) จะได้เศษ = P(k)\nที่นี่ k = '+k+'\nP('+k+') = '+a+'('+k+')³'+sgn(b)+'('+k+')²'+sgn(c)+'('+k+')'+sgn(d)+'\n= '+ans});
+}
+function gFactorTheorem(){
+  let r=rint(-4,4); const s=rint(-5,5), t=rint(-5,5);
+  // P(x) = (x - r)(x^2 + sx + t)
+  const a=1,b=s-r,c=t-r*s,d=-r*t;
+  const opt=k=>'(x'+(k>=0?' − ':' + ')+Math.abs(k)+')';
+  const others=[r+1,r-1,r+2,-r].filter(v=>v!==r);
+  return makeQ({subject:'math',topic:'จำนวนจริง',diff:3,
+    q:'กำหนดให้  P(x) = '+polyStr([a,b,c,d])+'\nข้อใดเป็นตัวประกอบของ P(x)',
+    correct:opt(r),wrong:others.map(opt),
+    explain:'ทฤษฎีบทตัวประกอบ: (x − k) เป็นตัวประกอบของ P(x) ก็ต่อเมื่อ P(k) = 0\nลองแทน x = '+r+' จะได้ P('+r+') = 0\nดังนั้น '+opt(r)+' เป็นตัวประกอบ (อีกส่วนคือ x²'+sgn(s)+'x'+sgn(t)+')'});
+}
+function gAbsEq(){
+  const a=pick([1,2,3]); let x1=rint(1,7), x2=rint(-7,0);
+  if(((x1+x2)%2)!==0) x2+=1;
+  const b=-a*(x1+x2)/2, c=a*x1+b;
+  if(c<=0||x1===x2) return null;
+  const inner=(a===1?'x':a+'x')+sgn(b);
+  const S=(m,n)=>'x = '+m+' หรือ x = '+n;
+  return makeQ({subject:'math',topic:'จำนวนจริง',diff:2,
+    q:'จงแก้สมการค่าสัมบูรณ์\n  | '+inner+' | = '+c,
+    correct:S(Math.min(x1,x2),Math.max(x1,x2)),
+    wrong:[S(x1,x1+1),S(-x1,-x2),S(Math.min(x1,x2)+1,Math.max(x1,x2)),'x = '+x1+' เพียงคำตอบเดียว'],
+    explain:'ถ้า |A| = c และ c > 0 จะได้ A = c หรือ A = −c\nกรณีที่ 1: '+inner+' = '+c+' → x = '+x1+'\nกรณีที่ 2: '+inner+' = −'+c+' → x = '+x2+'\nคำตอบคือ x = '+Math.min(x1,x2)+' และ x = '+Math.max(x1,x2)});
+}
+function gIneq(){
+  const a=pick([-4,-3,-2,2,3,4]), r=rint(-5,5), b=rint(-8,8), c=a*r+b;
+  const op=pick(['<','>','≤','≥']);
+  const flip={'<':'>','>':'<','≤':'≥','≥':'≤'};
+  const fin=a<0?flip[op]:op;
+  const A=(a===1?'x':(a===-1?'−x':a+'x'));
+  const S=o=>'x '+o+' '+r;
+  return makeQ({subject:'math',topic:'จำนวนจริง',diff:2,
+    q:'จงแก้อสมการ\n  '+A+sgn(b)+' '+op+' '+c,
+    correct:S(fin),wrong:[S(op),S(flip[fin]),'x '+fin+' '+(-r),'x '+op+' '+(c-b)],
+    explain:'ย้ายข้าง: '+A+' '+op+' '+c+' − ('+b+') = '+(c-b)+'\nหารด้วย '+a+(a<0?'  ← สัมประสิทธิ์ติดลบ ต้อง "กลับเครื่องหมายอสมการ"':'  (เป็นบวก เครื่องหมายคงเดิม)')+'\nได้คำตอบ '+S(fin)});
+}
+function gProperty(){
+  const P=[
+    {s:'a + b = b + a',n:'สมบัติการสลับที่ของการบวก'},
+    {s:'ab = ba',n:'สมบัติการสลับที่ของการคูณ'},
+    {s:'(a + b) + c = a + (b + c)',n:'สมบัติการเปลี่ยนหมู่ของการบวก'},
+    {s:'(ab)c = a(bc)',n:'สมบัติการเปลี่ยนหมู่ของการคูณ'},
+    {s:'a(b + c) = ab + ac',n:'สมบัติการแจกแจง'},
+    {s:'a + 0 = a',n:'สมบัติการมีเอกลักษณ์การบวก'},
+    {s:'a × 1 = a',n:'สมบัติการมีเอกลักษณ์การคูณ'},
+    {s:'a + (−a) = 0',n:'สมบัติการมีอินเวอร์สการบวก'},
+    {s:'a × (1/a) = 1 เมื่อ a ≠ 0',n:'สมบัติการมีอินเวอร์สการคูณ'}
+  ];
+  const c=pick(P);
+  return makeQ({subject:'math',topic:'จำนวนจริง',diff:1,
+    q:'ข้อความ  '+c.s+'  แสดงถึงสมบัติใดของจำนวนจริง',
+    correct:c.n,wrong:shuffle(P.filter(x=>x.n!==c.n)).slice(0,3).map(x=>x.n),
+    explain:'รูปแบบ '+c.s+' ตรงกับ “'+c.n+'”\nเคล็ดลับ: สลับที่ = สลับตำแหน่ง, เปลี่ยนหมู่ = ย้ายวงเล็บ, แจกแจง = กระจายคูณเข้าไป'});
+}
+function gNumberType(){
+  const irr=['√2','√3','√5','√7','π','√10','2 + √3','∛5'];
+  const rat=['√9','√16','0.333…','−7','22/7','0','1.25','√(4/9)','−√25'];
+  const askIrr=Math.random()<.5;
+  const c=askIrr?pick(irr):pick(rat), pool=askIrr?rat:irr;
+  return makeQ({subject:'math',topic:'จำนวนจริง',diff:1,
+    q:'ข้อใดเป็น'+(askIrr?'"จำนวนอตรรกยะ"':'"จำนวนตรรกยะ"'),
+    correct:c,wrong:shuffle(pool).slice(0,3),
+    explain:'จำนวนตรรกยะ = เขียนเป็นเศษส่วน a/b ได้ (b ≠ 0) รวมถึงทศนิยมซ้ำ\nจำนวนอตรรกยะ = เขียนเป็นเศษส่วนไม่ได้ เช่น √ ของจำนวนที่ไม่ใช่กำลังสองสมบูรณ์ และ π\nคำตอบคือ '+c+'\nระวัง: √9 = 3 และ √16 = 4 เป็นตรรกยะ ส่วน 22/7 เป็นตรรกยะ (เป็นแค่ค่าประมาณของ π)'});
+}
+function gDiscriminant(){
+  const a=pick([1,1,2]), b=rint(-8,8), c=rint(-8,8), D=b*b-4*a*c;
+  const ansTxt = D>0?'มีคำตอบเป็นจำนวนจริง 2 คำตอบที่ต่างกัน':(D===0?'มีคำตอบเป็นจำนวนจริง 1 คำตอบ (รากซ้ำ)':'ไม่มีคำตอบที่เป็นจำนวนจริง');
+  const all=['มีคำตอบเป็นจำนวนจริง 2 คำตอบที่ต่างกัน','มีคำตอบเป็นจำนวนจริง 1 คำตอบ (รากซ้ำ)','ไม่มีคำตอบที่เป็นจำนวนจริง','มีคำตอบเป็นจำนวนจริงมากกว่า 2 คำตอบ'];
+  return makeQ({subject:'math',topic:'จำนวนจริง',diff:3,
+    q:'สมการ  '+polyStr([0,a,b,c])+' = 0  มีคำตอบที่เป็นจำนวนจริงลักษณะใด',
+    correct:ansTxt,wrong:all.filter(t=>t!==ansTxt),
+    explain:'ใช้ดิสคริมิแนนต์ b² − 4ac\n= ('+b+')² − 4('+a+')('+c+') = '+(b*b)+' − '+(4*a*c)+' = '+D+'\nถ้า > 0 → 2 คำตอบ, = 0 → 1 คำตอบ, < 0 → ไม่มีคำตอบจริง\nที่นี่ได้ '+D+' → '+ansTxt});
+}
+function gAbsCalc(){
+  const a=rint(-9,9), b=rint(-9,9), x=rint(-6,6);
+  const ans=Math.abs(x-a)-Math.abs(x+b);
+  return makeQ({subject:'math',topic:'จำนวนจริง',diff:1,
+    q:'กำหนดให้ x = '+x+'\nจงหาค่าของ  | x'+sgn(-a)+' | − | x'+sgn(b)+' |',
+    correct:ans,wrong:[Math.abs(x-a)+Math.abs(x+b),-ans,Math.abs((x-a)-(x+b)),ans+2],
+    explain:'แทน x = '+x+'\n| '+x+sgn(-a)+' | = | '+(x-a)+' | = '+Math.abs(x-a)+'\n| '+x+sgn(b)+' | = | '+(x+b)+' | = '+Math.abs(x+b)+'\nผลลัพธ์ = '+Math.abs(x-a)+' − '+Math.abs(x+b)+' = '+ans+'\nอย่าลืม: ค่าสัมบูรณ์ต้องคิดข้างในให้เสร็จก่อนเสมอ'});
+}
+function gSeq(){
+  const type=pick(['arith','geo','sq','fib','tri']);
+  let seq=[],ans=0,exp='';
+  if(type==='arith'){const a=rint(2,15),d=rint(3,12);for(let i=0;i<5;i++)seq.push(a+i*d);ans=a+5*d;
+    exp='เป็นลำดับเลขคณิต ผลต่างคงที่ d = '+d+'\nพจน์ถัดไป = '+seq[4]+' + '+d+' = '+ans;}
+  else if(type==='geo'){const a=rint(1,5),r=pick([2,3]);for(let i=0;i<5;i++)seq.push(a*Math.pow(r,i));ans=a*Math.pow(r,5);
+    exp='เป็นลำดับเรขาคณิต อัตราส่วนคงที่ r = '+r+'\nพจน์ถัดไป = '+seq[4]+' × '+r+' = '+ans;}
+  else if(type==='sq'){const c=rint(0,5);for(let i=1;i<=5;i++)seq.push(i*i+c);ans=36+c;
+    exp='รูปแบบคือ n² '+(c?('+ '+c):'')+' เมื่อ n = 1, 2, 3, …\nพจน์ที่ 6 = 6²'+(c?(' + '+c):'')+' = '+ans;}
+  else if(type==='fib'){const a=rint(1,6),b=rint(2,8);seq=[a,b];for(let i=2;i<5;i++)seq.push(seq[i-1]+seq[i-2]);ans=seq[4]+seq[3];
+    exp='แต่ละพจน์เกิดจากผลบวกของสองพจน์ก่อนหน้า\nพจน์ถัดไป = '+seq[3]+' + '+seq[4]+' = '+ans;}
+  else{const a=rint(1,8);seq=[a];let add=1;for(let i=1;i<5;i++){seq.push(seq[i-1]+add);add++;}ans=seq[4]+5;
+    exp='ผลต่างเพิ่มขึ้นทีละ 1 คือ +1, +2, +3, +4, …\nพจน์ถัดไป = '+seq[4]+' + 5 = '+ans;}
+  return makeQ({subject:'math',topic:'ตรรกะเชิงวิเคราะห์',diff:2,
+    q:'จงหาพจน์ถัดไปของลำดับ\n  '+seq.join(' , ')+' , ?',
+    correct:ans,wrong:[ans+1,ans-1,ans+rint(2,6),Math.round(ans*1.5)],
+    explain:exp+'\nเทคนิค: ลองหา "ผลต่าง" ก่อน ถ้าไม่คงที่ให้ลองหา "อัตราส่วน" หรือดูผลต่างของผลต่าง'});
+}
+const MATH=[gSetUnion,gSetDiff,gSetSubsets,gSetOps,gSetWord,gLogicTruth,gLogicNeg,gLogicEquiv,
+  gTautology,gQuant,gLogicArg,gLogicThai,gFactor,gQuadRoots,gRemainder,gFactorTheorem,
+  gAbsEq,gIneq,gProperty,gNumberType,gDiscriminant,gAbsCalc,gSeq];
+
+/* ======================= BIOLOGY GENERATORS ======================= */
+const ORG=[
+  ['ไมโทคอนเดรีย','สลายสารอาหารเพื่อสร้าง ATP (การหายใจระดับเซลล์)'],
+  ['ไรโบโซม','เป็นแหล่งสังเคราะห์โปรตีน'],
+  ['ร่างแหเอนโดพลาซึมแบบขรุขระ (RER)','สังเคราะห์และลำเลียงโปรตีน เพราะมีไรโบโซมเกาะอยู่'],
+  ['ร่างแหเอนโดพลาซึมแบบเรียบ (SER)','สังเคราะห์ลิพิดและสเตอรอยด์ และกำจัดสารพิษ'],
+  ['กอลจิคอมเพลกซ์','ดัดแปลง บรรจุ และส่งสารออกนอกเซลล์'],
+  ['ไลโซโซม','ย่อยสลายสารและออร์แกเนลล์ที่เสื่อมสภาพด้วยเอนไซม์ไฮโดรไลติก'],
+  ['คลอโรพลาสต์','เปลี่ยนพลังงานแสงเป็นพลังงานเคมีในการสังเคราะห์ด้วยแสง'],
+  ['แวคิวโอลกลาง','สะสมน้ำและสารต่าง ๆ ทำให้เซลล์พืชเต่ง'],
+  ['นิวเคลียส','ควบคุมกิจกรรมของเซลล์และเก็บสารพันธุกรรม'],
+  ['เซนทริโอล','สร้างเส้นใยสปินเดิลช่วยในการแบ่งเซลล์ของเซลล์สัตว์'],
+  ['เยื่อหุ้มเซลล์','ควบคุมการผ่านเข้าออกของสาร เป็นเยื่อเลือกผ่าน'],
+  ['ผนังเซลล์','ค้ำจุนและคงรูปร่างของเซลล์พืช สร้างจากเซลลูโลส'],
+  ['นิวคลีโอลัส','สร้าง rRNA และประกอบหน่วยย่อยของไรโบโซม'],
+  ['เพอรอกซิโซม','สลายไฮโดรเจนเพอร์ออกไซด์ด้วยเอนไซม์แคทาเลส']
+];
+function gOrganelle(){
+  const c=pick(ORG), others=ORG.filter(o=>o[0]!==c[0]);
+  if(Math.random()<.5){
+    return makeQ({subject:'bio',topic:'เซลล์',diff:1,
+      q:'ออร์แกเนลล์ใดทำหน้าที่ "'+c[1]+'"',
+      correct:c[0],wrong:shuffle(others).slice(0,3).map(o=>o[0]),
+      explain:c[0]+' ทำหน้าที่ '+c[1]+'\nเทียบกับตัวเลือกอื่น เช่น '+others[0][0]+' ทำหน้าที่'+others[0][1]});
+  }
+  return makeQ({subject:'bio',topic:'เซลล์',diff:1,
+    q:'"'+c[0]+'" ทำหน้าที่ใดในเซลล์',
+    correct:c[1],wrong:shuffle(others).slice(0,3).map(o=>o[1]),
+    explain:c[0]+' → '+c[1]+'\nจำง่าย ๆ ว่าออร์แกเนลล์แต่ละชนิดมีหน้าที่เฉพาะ ทำงานประสานกันเหมือนโรงงาน'});
+}
+const MACRO=[
+  {n:'คาร์โบไฮเดรต',m:'มอนอแซ็กคาไรด์ เช่น กลูโคส',b:'พันธะไกลโคซิดิก',ex:'แป้ง ไกลโคเจน เซลลูโลส',t:'สารละลายเบเนดิกต์ (น้ำตาลรีดิวซ์) / ไอโอดีน (แป้ง)'},
+  {n:'โปรตีน',m:'กรดอะมิโน',b:'พันธะเพปไทด์',ex:'เอนไซม์ ฮีโมโกลบิน แอนติบอดี',t:'สารละลายไบยูเรต (เปลี่ยนเป็นสีม่วง)'},
+  {n:'ลิพิด',m:'กรดไขมันและกลีเซอรอล',b:'พันธะเอสเทอร์',ex:'ไขมัน น้ำมัน ฟอสโฟลิพิด สเตอรอยด์',t:'สีซูดานที่ 3 / ทดสอบรอยโปร่งแสงบนกระดาษ'},
+  {n:'กรดนิวคลีอิก',m:'นิวคลีโอไทด์',b:'พันธะฟอสโฟไดเอสเทอร์',ex:'DNA และ RNA',t:'ไดฟีนิลามีน (DNA)'}
+];
+function gMacro(){
+  const c=pick(MACRO), o=MACRO.filter(x=>x.n!==c.n), f=pick(['m','b','ex','t']);
+  const label={m:'มีหน่วยย่อย (มอนอเมอร์) เป็นอะไร',b:'ยึดหน่วยย่อยเข้าด้วยกันด้วยพันธะชนิดใด',
+    ex:'ข้อใดเป็นตัวอย่างของสารชนิดนี้',t:'ใช้สารใดในการทดสอบ'}[f];
+  if(o.length<3) return null;
+  return makeQ({subject:'bio',topic:'เคมีพื้นฐานของชีวิต',diff:2,
+    q:'สารชีวโมเลกุลประเภท "'+c.n+'" '+label,
+    correct:c[f],wrong:o.map(x=>x[f]),
+    explain:c.n+'\n• มอนอเมอร์: '+c.m+'\n• พันธะ: '+c.b+'\n• ตัวอย่าง: '+c.ex+'\n• การทดสอบ: '+c.t});
+}
+function gMacroFn(){
+  const F=[
+    ['คาร์โบไฮเดรต','ให้พลังงานหลักแก่ร่างกาย 4 กิโลแคลอรีต่อกรัม'],
+    ['โปรตีน','เป็นโครงสร้างของเซลล์ สร้างเอนไซม์และฮอร์โมนบางชนิด'],
+    ['ลิพิด','สะสมพลังงานสูงสุดต่อกรัม เป็นองค์ประกอบของเยื่อหุ้มเซลล์'],
+    ['กรดนิวคลีอิก','เก็บและถ่ายทอดข้อมูลทางพันธุกรรม'],
+    ['น้ำ','เป็นตัวทำละลายและควบคุมอุณหภูมิของร่างกาย']
+  ];
+  const c=pick(F);
+  return makeQ({subject:'bio',topic:'เคมีพื้นฐานของชีวิต',diff:1,
+    q:'สารใดทำหน้าที่ "'+c[1]+'"',correct:c[0],
+    wrong:shuffle(F.filter(x=>x[0]!==c[0])).slice(0,3).map(x=>x[0]),
+    explain:c[0]+' → '+c[1]+'\nเปรียบเทียบ: ลิพิดให้พลังงาน 9 kcal/g ซึ่งมากกว่าคาร์โบไฮเดรตและโปรตีน (4 kcal/g)'});
+}
+const TRANS=[
+  ['การแพร่ (diffusion)','สารเคลื่อนที่จากบริเวณที่มีความเข้มข้นสูงไปต่ำ โดยไม่ใช้พลังงาน'],
+  ['ออสโมซิส (osmosis)','การแพร่ของน้ำผ่านเยื่อเลือกผ่าน จากสารละลายเจือจางไปเข้มข้น'],
+  ['การแพร่แบบฟาซิลิเทต','สารผ่านเยื่อโดยอาศัยโปรตีนตัวพา แต่ไม่ใช้พลังงาน'],
+  ['การลำเลียงแบบใช้พลังงาน (active transport)','ลำเลียงสารจากความเข้มข้นต่ำไปสูง ต้องใช้ ATP เช่น โซเดียม-โพแทสเซียมปั๊ม'],
+  ['เอกโซไซโทซิส','ขับสารโมเลกุลใหญ่ออกนอกเซลล์โดยเวสิเคิลรวมกับเยื่อหุ้มเซลล์'],
+  ['ฟาโกไซโทซิส','เซลล์ยื่นส่วนของเยื่อหุ้มเซลล์โอบล้อมอนุภาคของแข็งเข้าสู่เซลล์'],
+  ['พิโนไซโทซิส','เซลล์นำสารที่เป็นของเหลวเข้าสู่เซลล์โดยการสร้างถุงเล็ก ๆ']
+];
+function gTransport(){
+  const c=pick(TRANS), o=TRANS.filter(x=>x[0]!==c[0]);
+  if(Math.random()<.5)
+    return makeQ({subject:'bio',topic:'การลำเลียงสาร',diff:2,
+      q:'ข้อใดตรงกับ "'+c[1]+'"',correct:c[0],wrong:shuffle(o).slice(0,3).map(x=>x[0]),
+      explain:c[0]+' → '+c[1]+'\nหลักจำ: ถ้าสารเคลื่อนที่ "ทวนความเข้มข้น" ต้องใช้พลังงานเสมอ'});
+  return makeQ({subject:'bio',topic:'การลำเลียงสาร',diff:2,
+    q:'"'+c[0]+'" มีลักษณะอย่างไร',correct:c[1],wrong:shuffle(o).slice(0,3).map(x=>x[1]),
+    explain:c[0]+' → '+c[1]});
+}
+function gTonicity(){
+  const cell=pick(['เซลล์เม็ดเลือดแดง','เซลล์พืช (เช่น เซลล์สาหร่ายหางกระรอก)']);
+  const sol=pick(['ไฮเปอร์โทนิก (เข้มข้นกว่าภายในเซลล์)','ไฮโพโทนิก (เจือจางกว่าภายในเซลล์)','ไอโซโทนิก (เข้มข้นเท่ากับภายในเซลล์)']);
+  const map={
+    'เซลล์เม็ดเลือดแดง|ไฮเปอร์โทนิก (เข้มข้นกว่าภายในเซลล์)':['เซลล์เหี่ยวย่น เพราะน้ำออสโมซิสออกจากเซลล์','น้ำเคลื่อนที่ออกจากเซลล์ไปยังสารละลายที่เข้มข้นกว่า เซลล์จึงเหี่ยว (crenation)'],
+    'เซลล์เม็ดเลือดแดง|ไฮโพโทนิก (เจือจางกว่าภายในเซลล์)':['เซลล์บวมและแตก (ฮีโมไลซิส)','น้ำออสโมซิสเข้าเซลล์จำนวนมาก เซลล์สัตว์ไม่มีผนังเซลล์จึงแตก'],
+    'เซลล์เม็ดเลือดแดง|ไอโซโทนิก (เข้มข้นเท่ากับภายในเซลล์)':['เซลล์มีรูปร่างปกติ น้ำเข้าออกเท่ากัน','อัตราการเข้าออกของน้ำเท่ากัน เซลล์จึงคงรูปเดิม'],
+    'เซลล์พืช (เช่น เซลล์สาหร่ายหางกระรอก)|ไฮเปอร์โทนิก (เข้มข้นกว่าภายในเซลล์)':['เกิดพลาสโมไลซิส เยื่อหุ้มเซลล์หดแยกจากผนังเซลล์','น้ำออกจากเซลล์ ไซโทพลาซึมหดตัวแยกจากผนังเซลล์ เรียกว่า plasmolysis'],
+    'เซลล์พืช (เช่น เซลล์สาหร่ายหางกระรอก)|ไฮโพโทนิก (เจือจางกว่าภายในเซลล์)':['เซลล์เต่ง (turgid) แต่ไม่แตกเพราะมีผนังเซลล์','น้ำเข้าเซลล์ แรงดันเต่งเพิ่มขึ้น ผนังเซลล์ช่วยต้านไว้ไม่ให้แตก'],
+    'เซลล์พืช (เช่น เซลล์สาหร่ายหางกระรอก)|ไอโซโทนิก (เข้มข้นเท่ากับภายในเซลล์)':['เซลล์อ่อนตัว ไม่เต่ง (flaccid)','น้ำเข้าออกเท่ากัน เซลล์พืชจึงไม่เต่ง ทำให้พืชดูเหี่ยวเล็กน้อย']
+  };
+  const k=cell+'|'+sol, v=map[k]; if(!v) return null;
+  const all=Object.keys(map).map(x=>map[x][0]);
+  return makeQ({subject:'bio',topic:'การลำเลียงสาร',diff:3,
+    q:'ถ้านำ'+cell+'ไปแช่ในสารละลาย'+sol+'\nจะเกิดอะไรขึ้น',
+    correct:v[0],wrong:shuffle(all.filter(t=>t!==v[0])).slice(0,3),
+    explain:v[1]+'\nหลักจำ: น้ำเคลื่อนที่จาก "เจือจาง → เข้มข้น" เสมอ และเซลล์พืชมีผนังเซลล์ช่วยกันการแตก'});
+}
+function gMicroMag(){
+  const oc=pick([5,10,15]), ob=pick([4,10,40,100]), ans=oc*ob;
+  return makeQ({subject:'bio',topic:'กล้องจุลทรรศน์',diff:1,
+    q:'ใช้กล้องจุลทรรศน์แบบใช้แสง โดยเลนส์ใกล้ตากำลังขยาย '+oc+'X และเลนส์ใกล้วัตถุกำลังขยาย '+ob+'X\nภาพที่เห็นมีกำลังขยายเท่าใด',
+    correct:ans+'X',wrong:[(oc+ob)+'X',(ans/2)+'X',(ans*2)+'X',(ob-oc)+'X'],
+    explain:'กำลังขยายรวม = กำลังขยายเลนส์ใกล้ตา × กำลังขยายเลนส์ใกล้วัตถุ\n= '+oc+' × '+ob+' = '+ans+' เท่า\nหมายเหตุ: ภาพที่เห็นเป็นภาพเสมือน หัวกลับ และกลับซ้ายขวากับวัตถุจริง'});
+}
+const MPART=[
+  ['เลนส์ใกล้ตา (ocular lens)','ขยายภาพที่ได้จากเลนส์ใกล้วัตถุอีกครั้งหนึ่ง'],
+  ['เลนส์ใกล้วัตถุ (objective lens)','ขยายภาพของวัตถุเป็นอันดับแรก'],
+  ['ปุ่มปรับภาพหยาบ','เลื่อนลำกล้องขึ้นลงอย่างรวดเร็ว ใช้กับเลนส์กำลังขยายต่ำ'],
+  ['ปุ่มปรับภาพละเอียด','ปรับความคมชัดของภาพ ใช้เมื่อใช้เลนส์กำลังขยายสูง'],
+  ['ไดอะแฟรม','ปรับปริมาณแสงที่ผ่านเข้าสู่วัตถุ'],
+  ['แท่นวางวัตถุ','เป็นที่วางสไลด์ตัวอย่าง'],
+  ['จานหมุน (revolving nosepiece)','หมุนเปลี่ยนกำลังขยายของเลนส์ใกล้วัตถุ'],
+  ['แหล่งกำเนิดแสง','ให้แสงส่องผ่านวัตถุขึ้นสู่เลนส์']
+];
+function gMicroPart(){
+  const c=pick(MPART), o=MPART.filter(x=>x[0]!==c[0]);
+  return makeQ({subject:'bio',topic:'กล้องจุลทรรศน์',diff:1,
+    q:'ส่วนใดของกล้องจุลทรรศน์ทำหน้าที่ "'+c[1]+'"',
+    correct:c[0],wrong:shuffle(o).slice(0,3).map(x=>x[0]),
+    explain:c[0]+' → '+c[1]+'\nข้อควรจำ: เมื่อเลื่อนสไลด์ไปทางขวา ภาพจะเคลื่อนไปทางซ้าย เพราะภาพหัวกลับ'});
+}
+function gSciMethod(){
+  const steps=['ตั้งปัญหา / สังเกต','ตั้งสมมติฐาน','ตรวจสอบสมมติฐาน (ทดลอง)','รวบรวมและวิเคราะห์ข้อมูล','สรุปผลการทดลอง'];
+  const i=rint(0,4);
+  const V=[
+    {q:'ตัวแปรใดคือ "ตัวแปรต้น" ในการทดลองที่ศึกษาผลของปริมาณปุ๋ยต่อความสูงของต้นถั่ว',c:'ปริมาณปุ๋ยที่ใส่',
+      w:['ความสูงของต้นถั่ว','ชนิดของดิน','ปริมาณน้ำที่รดเท่ากันทุกกระถาง'],
+      e:'ตัวแปรต้น = สิ่งที่ผู้ทดลองจงใจเปลี่ยน → ปริมาณปุ๋ย\nตัวแปรตาม = สิ่งที่วัดผล → ความสูงของต้นถั่ว\nตัวแปรควบคุม = สิ่งที่ต้องทำให้เหมือนกัน เช่น ชนิดดิน ปริมาณน้ำ'},
+    {q:'ตัวแปรใดคือ "ตัวแปรตาม" ในการทดลองที่ศึกษาผลของอุณหภูมิต่ออัตราการงอกของเมล็ด',c:'อัตราการงอกของเมล็ด',
+      w:['อุณหภูมิที่ใช้','จำนวนเมล็ดที่ใช้','ชนิดของเมล็ด'],
+      e:'ตัวแปรตามคือผลที่เกิดขึ้นและถูกวัด → อัตราการงอก\nส่วนอุณหภูมิคือตัวแปรต้นที่เราเปลี่ยน'},
+    {q:'ชุดควบคุม (control) ในการทดลองมีไว้เพื่ออะไร',c:'ใช้เปรียบเทียบกับชุดทดลองเพื่อดูผลของตัวแปรต้น',
+      w:['เพื่อเพิ่มจำนวนตัวอย่างให้มากขึ้น','เพื่อทำให้การทดลองเสร็จเร็วขึ้น','เพื่อยืนยันว่าสมมติฐานถูกต้องเสมอ'],
+      e:'ชุดควบคุมคือชุดที่ไม่ได้รับตัวแปรต้น ใช้เป็นฐานเปรียบเทียบ ทำให้สรุปได้ว่าผลที่เกิดมาจากตัวแปรต้นจริง'}
+  ];
+  if(Math.random()<.5){
+    const v=pick(V);
+    return makeQ({subject:'bio',topic:'การศึกษาชีววิทยา',diff:2,q:v.q,correct:v.c,wrong:v.w,explain:v.e});
+  }
+  return makeQ({subject:'bio',topic:'การศึกษาชีววิทยา',diff:1,
+    q:'ขั้นตอนที่ '+(i+1)+' ของกระบวนการทางวิทยาศาสตร์คือข้อใด',
+    correct:steps[i],wrong:shuffle(steps.filter(s=>s!==steps[i])).slice(0,3),
+    explain:'ลำดับกระบวนการทางวิทยาศาสตร์:\n1) '+steps[0]+'\n2) '+steps[1]+'\n3) '+steps[2]+'\n4) '+steps[3]+'\n5) '+steps[4]});
+}
+function gLifeChar(){
+  const C=[
+    ['การรักษาดุลยภาพ (homeostasis)','การรักษาสภาพภายในร่างกายให้คงที่ เช่น อุณหภูมิ น้ำ แร่ธาตุ'],
+    ['การสืบพันธุ์','การให้กำเนิดสิ่งมีชีวิตรุ่นใหม่ที่มีลักษณะคล้ายเดิม'],
+    ['การตอบสนองต่อสิ่งเร้า','การมีปฏิกิริยาต่อการเปลี่ยนแปลงของสิ่งแวดล้อม'],
+    ['การเจริญเติบโต','การเพิ่มขนาดและจำนวนเซลล์อย่างมีแบบแผน'],
+    ['เมแทบอลิซึม','ปฏิกิริยาเคมีทั้งหมดในร่างกายเพื่อสร้างและสลายสาร'],
+    ['การจัดระบบเป็นหน่วย','สิ่งมีชีวิตประกอบด้วยเซลล์ซึ่งจัดระบบเป็นเนื้อเยื่อ อวัยวะ ระบบ']
+  ];
+  const c=pick(C);
+  return makeQ({subject:'bio',topic:'การศึกษาชีววิทยา',diff:1,
+    q:'ลักษณะใดของสิ่งมีชีวิตตรงกับ "'+c[1]+'"',
+    correct:c[0],wrong:shuffle(C.filter(x=>x[0]!==c[0])).slice(0,3).map(x=>x[0]),
+    explain:c[0]+' → '+c[1]});
+}
+function gWater(){
+  const W=[
+    ['มีแรงยึดเหนี่ยวระหว่างโมเลกุลด้วยพันธะไฮโดรเจน','ทำให้น้ำมีจุดเดือดสูงและมีแรงตึงผิวสูง'],
+    ['มีความร้อนจำเพาะสูง','ช่วยรักษาอุณหภูมิของร่างกายและสิ่งแวดล้อมให้คงที่'],
+    ['เป็นตัวทำละลายที่ดี','ละลายสารมีขั้วและสารไอออนิกได้ดี จึงเป็นตัวกลางของปฏิกิริยาในเซลล์'],
+    ['น้ำแข็งมีความหนาแน่นน้อยกว่าน้ำ','น้ำแข็งจึงลอยอยู่ผิวน้ำ ช่วยให้สิ่งมีชีวิตใต้น้ำอยู่รอดในฤดูหนาว'],
+    ['มีแรงโคฮีชันและแอดฮีชัน','ช่วยการลำเลียงน้ำขึ้นไปตามท่อไซเล็มของพืช']
+  ];
+  const c=pick(W);
+  return makeQ({subject:'bio',topic:'เคมีพื้นฐานของชีวิต',diff:2,
+    q:'สมบัติของน้ำข้อใดอธิบายเรื่อง "'+c[1]+'"',
+    correct:c[0],wrong:shuffle(W.filter(x=>x[0]!==c[0])).slice(0,3).map(x=>x[0]),
+    explain:c[0]+' → '+c[1]+'\nสมบัติพิเศษของน้ำเกือบทั้งหมดมีต้นเหตุจาก "พันธะไฮโดรเจน" ระหว่างโมเลกุล'});
+}
+function gEnzyme(){
+  const E=[
+    ['เอนไซม์ทำหน้าที่ลดพลังงานกระตุ้นของปฏิกิริยา','จึงทำให้ปฏิกิริยาเกิดเร็วขึ้นโดยไม่เปลี่ยนทิศทางของปฏิกิริยา'],
+    ['เอนไซม์มีความจำเพาะต่อสับสเตรต','เพราะบริเวณเร่ง (active site) มีรูปร่างเข้ากับสับสเตรตเฉพาะชนิด'],
+    ['เอนไซม์ไม่ถูกใช้ไปในปฏิกิริยา','เมื่อปฏิกิริยาเสร็จ เอนไซม์กลับมาใช้ใหม่ได้อีก'],
+    ['อุณหภูมิที่สูงเกินไปทำให้เอนไซม์เสียสภาพ','โครงสร้างโปรตีนคลายตัว บริเวณเร่งเปลี่ยนรูป จึงทำงานไม่ได้'],
+    ['เอนไซม์ทำงานได้ดีที่สุดที่ pH จำเพาะ','เช่น เพปซินในกระเพาะอาหารทำงานได้ดีที่ pH ประมาณ 2']
+  ];
+  const c=pick(E);
+  return makeQ({subject:'bio',topic:'เอนไซม์',diff:2,
+    q:'ข้อใดกล่าวถึงเอนไซม์ได้ "ถูกต้อง"',correct:c[0],
+    wrong:['เอนไซม์เป็นลิพิดที่สร้างจากกอลจิคอมเพลกซ์','เอนไซม์ถูกใช้หมดไปทุกครั้งที่เกิดปฏิกิริยา',
+      'เอนไซม์ทำงานได้ดีขึ้นเรื่อย ๆ เมื่ออุณหภูมิสูงขึ้นไม่จำกัด','เอนไซม์ 1 ชนิดเร่งปฏิกิริยาได้ทุกชนิดในเซลล์'],
+    explain:c[0]+'\n'+c[1]+'\nสรุปคุณสมบัติเด่น: เป็นโปรตีน · จำเพาะ · ลดพลังงานกระตุ้น · นำกลับมาใช้ใหม่ได้ · ไวต่ออุณหภูมิและ pH'});
+}
+const PHASE=[
+  ['อินเตอร์เฟส','เซลล์เจริญเติบโตและจำลอง DNA แบ่งเป็นระยะ G1, S และ G2'],
+  ['โพรเฟส','โครโมโซมหดสั้นมองเห็นชัด เยื่อหุ้มนิวเคลียสสลาย เส้นใยสปินเดิลเริ่มปรากฏ'],
+  ['เมทาเฟส','โครโมโซมเรียงตัวในแนวกึ่งกลางเซลล์'],
+  ['แอนาเฟส','โครมาทิดพี่น้องแยกออกจากกันเคลื่อนไปยังขั้วเซลล์'],
+  ['เทโลเฟส','โครโมโซมคลายตัว เยื่อหุ้มนิวเคลียสปรากฏขึ้นใหม่']
+];
+function gMitosis(){
+  const c=pick(PHASE), o=PHASE.filter(x=>x[0]!==c[0]);
+  return makeQ({subject:'bio',topic:'การแบ่งเซลล์',diff:2,
+    q:'เหตุการณ์ "'+c[1]+'" เกิดขึ้นในระยะใดของการแบ่งเซลล์',
+    correct:c[0],wrong:shuffle(o).slice(0,3).map(x=>x[0]),
+    explain:c[0]+' → '+c[1]+'\nลำดับระยะ: อินเตอร์เฟส → โพรเฟส → เมทาเฟส → แอนาเฟส → เทโลเฟส (จำว่า I-P-M-A-T)'});
+}
+function gMeiosis(){
+  const M=[
+    ['เกิดการไขว้เปลี่ยน (crossing over)','ระยะโพรเฟส I ของไมโอซิส ทำให้เกิดความหลากหลายทางพันธุกรรม'],
+    ['โฮโมโลกัสโครโมโซมแยกออกจากกัน','ระยะแอนาเฟส I ซึ่งเป็นจุดที่ทำให้จำนวนโครโมโซมลดลงครึ่งหนึ่ง'],
+    ['ได้เซลล์ลูก 4 เซลล์ที่มีโครโมโซมเป็นแฮพลอยด์','ผลสุดท้ายของไมโอซิส ใช้สร้างเซลล์สืบพันธุ์'],
+    ['ได้เซลล์ลูก 2 เซลล์ที่เหมือนเซลล์แม่ทุกประการ','ผลของไมโทซิส ใช้ในการเจริญเติบโตและซ่อมแซมส่วนที่สึกหรอ']
+  ];
+  const c=pick(M);
+  return makeQ({subject:'bio',topic:'การแบ่งเซลล์',diff:3,
+    q:'ข้อความ "'+c[0]+'" เกี่ยวข้องกับข้อใดมากที่สุด',
+    correct:c[1],wrong:shuffle(M.filter(x=>x[1]!==c[1])).slice(0,3).map(x=>x[1]),
+    explain:c[0]+'\n→ '+c[1]+'\nเปรียบเทียบ: ไมโทซิสได้ 2 เซลล์ 2n เหมือนเดิม ส่วนไมโอซิสได้ 4 เซลล์ n (ลดครึ่ง)'});
+}
+function gChromosome(){
+  const n2=pick([8,12,16,20,24,36,46,48]);
+  const mode=pick(['mito','meio','count','round']);
+  const D={
+    mito:{q:'สิ่งมีชีวิตชนิดหนึ่งมีโครโมโซมในเซลล์ร่างกาย 2n = '+n2+'\nเซลล์ลูกที่ได้จากการแบ่งเซลล์แบบไมโทซิสมีโครโมโซมกี่แท่ง',
+      c:n2+' แท่ง',e:'ไมโทซิสให้เซลล์ลูกที่มีจำนวนโครโมโซมเท่าเดิม (2n)\nจึงได้ '+n2+' แท่ง'},
+    meio:{q:'สิ่งมีชีวิตชนิดหนึ่งมีโครโมโซมในเซลล์ร่างกาย 2n = '+n2+'\nเซลล์สืบพันธุ์ที่เกิดจากไมโอซิสมีโครโมโซมกี่แท่ง',
+      c:(n2/2)+' แท่ง',e:'ไมโอซิสลดจำนวนโครโมโซมลงครึ่งหนึ่ง (2n → n)\nจึงได้ '+n2+' ÷ 2 = '+(n2/2)+' แท่ง'},
+    count:{q:'เซลล์หนึ่งเซลล์ที่มี 2n = '+n2+' แบ่งเซลล์แบบไมโอซิสจนสมบูรณ์ จะได้เซลล์ลูกกี่เซลล์',
+      c:'4 เซลล์',e:'ไมโอซิสมี 2 รอบการแบ่ง (I และ II) จาก 1 เซลล์ จึงได้เซลล์ลูก 4 เซลล์ แต่ละเซลล์มี n = '+(n2/2)},
+    round:{q:'เซลล์ 1 เซลล์แบ่งแบบไมโทซิสติดต่อกัน 4 รอบ จะได้เซลล์ทั้งหมดกี่เซลล์',
+      c:'16 เซลล์',e:'ไมโทซิส 1 รอบได้ 2 เซลล์ → จำนวนเซลล์ = 2ⁿ เมื่อ n คือจำนวนรอบ\n2⁴ = 16 เซลล์'}
+  }[mode];
+  const pool=[n2+' แท่ง',(n2/2)+' แท่ง',(n2*2)+' แท่ง',(n2/4)+' แท่ง','2 เซลล์','4 เซลล์','8 เซลล์','16 เซลล์'];
+  return makeQ({subject:'bio',topic:'การแบ่งเซลล์',diff:2,q:D.q,correct:D.c,
+    wrong:shuffle(pool.filter(x=>x!==D.c)).slice(0,4),explain:D.e});
+}
+function gCellCompare(){
+  const C=[
+    {q:'โครงสร้างใดพบใน "เซลล์พืช" แต่ไม่พบในเซลล์สัตว์',c:'ผนังเซลล์และคลอโรพลาสต์',
+      w:['ไลโซโซมและเซนทริโอล','ไมโทคอนเดรีย','ไรโบโซมและนิวเคลียส'],
+      e:'เซลล์พืชมีผนังเซลล์ คลอโรพลาสต์ และแวคิวโอลกลางขนาดใหญ่\nเซลล์สัตว์มีเซนทริโอลและไลโซโซมเด่นชัด'},
+    {q:'โครงสร้างใดพบใน "เซลล์สัตว์" แต่ไม่พบในเซลล์พืชทั่วไป',c:'เซนทริโอล',
+      w:['ผนังเซลล์','คลอโรพลาสต์','แวคิวโอลกลางขนาดใหญ่'],
+      e:'เซนทริโอลพบในเซลล์สัตว์ ทำหน้าที่สร้างเส้นใยสปินเดิลขณะแบ่งเซลล์'},
+    {q:'ข้อใดเป็นลักษณะของ "เซลล์โพรคาริโอต"',c:'ไม่มีเยื่อหุ้มนิวเคลียส สารพันธุกรรมกระจายในไซโทพลาซึม',
+      w:['มีนิวเคลียสที่มีเยื่อหุ้มชัดเจน','มีไมโทคอนเดรียและกอลจิคอมเพลกซ์','มีร่างแหเอนโดพลาซึมจำนวนมาก'],
+      e:'โพรคาริโอต เช่น แบคทีเรีย ไม่มีเยื่อหุ้มนิวเคลียสและไม่มีออร์แกเนลล์ที่มีเยื่อหุ้ม มีเพียงไรโบโซม'},
+    {q:'ออร์แกเนลล์ใดพบได้ทั้งในเซลล์โพรคาริโอตและยูคาริโอต',c:'ไรโบโซม',
+      w:['ไมโทคอนเดรีย','กอลจิคอมเพลกซ์','ร่างแหเอนโดพลาซึม'],
+      e:'ไรโบโซมเป็นออร์แกเนลล์ที่ไม่มีเยื่อหุ้ม จึงพบได้ในทุกเซลล์ที่มีการสร้างโปรตีน'}
+  ];
+  const c=pick(C);
+  return makeQ({subject:'bio',topic:'เซลล์',diff:2,q:c.q,correct:c.c,wrong:c.w,explain:c.e});
+}
+function gLevels(){
+  const L=['เซลล์','เนื้อเยื่อ','อวัยวะ','ระบบอวัยวะ','สิ่งมีชีวิต','ประชากร','กลุ่มสิ่งมีชีวิต','ระบบนิเวศ'];
+  const i=rint(0,L.length-2);
+  return makeQ({subject:'bio',topic:'การศึกษาชีววิทยา',diff:1,
+    q:'ในลำดับการจัดระบบของสิ่งมีชีวิต ระดับที่อยู่ถัดจาก "'+L[i]+'" คือข้อใด',
+    correct:L[i+1],wrong:shuffle(L.filter(x=>x!==L[i+1]&&x!==L[i])).slice(0,3),
+    explain:'ลำดับการจัดระบบ:\n'+L.join(' → ')+'\nดังนั้นถัดจาก '+L[i]+' คือ '+L[i+1]});
+}
+function gBranch(){
+  const B=[
+    ['พฤกษศาสตร์','ศึกษาเกี่ยวกับพืช'],['สัตววิทยา','ศึกษาเกี่ยวกับสัตว์'],
+    ['จุลชีววิทยา','ศึกษาเกี่ยวกับจุลินทรีย์'],['พันธุศาสตร์','ศึกษาการถ่ายทอดลักษณะทางพันธุกรรม'],
+    ['นิเวศวิทยา','ศึกษาความสัมพันธ์ของสิ่งมีชีวิตกับสิ่งแวดล้อม'],['กายวิภาคศาสตร์','ศึกษาโครงสร้างภายในของสิ่งมีชีวิต'],
+    ['สรีรวิทยา','ศึกษาหน้าที่การทำงานของอวัยวะและระบบต่าง ๆ'],['เซลล์วิทยา','ศึกษาโครงสร้างและหน้าที่ของเซลล์']
+  ];
+  const c=pick(B);
+  return makeQ({subject:'bio',topic:'การศึกษาชีววิทยา',diff:1,
+    q:'วิชาใดศึกษาเกี่ยวกับ "'+c[1]+'"',correct:c[0],
+    wrong:shuffle(B.filter(x=>x[0]!==c[0])).slice(0,3).map(x=>x[0]),
+    explain:c[0]+' → '+c[1]});
+}
+function gCellTheory(){
+  const T=[
+    {q:'ข้อใดคือใจความสำคัญของ "ทฤษฎีเซลล์"',c:'สิ่งมีชีวิตทุกชนิดประกอบด้วยเซลล์ และเซลล์เกิดจากเซลล์ที่มีอยู่ก่อน',
+      w:['เซลล์ทุกชนิดมีขนาดและรูปร่างเหมือนกัน','เซลล์เกิดขึ้นเองได้จากสิ่งไม่มีชีวิต','เซลล์พืชเท่านั้นที่สามารถแบ่งตัวได้'],
+      e:'ทฤษฎีเซลล์มี 3 ใจความ: 1) สิ่งมีชีวิตประกอบด้วยเซลล์ 2) เซลล์เป็นหน่วยพื้นฐานของโครงสร้างและหน้าที่ 3) เซลล์เกิดจากเซลล์เดิม'},
+    {q:'นักวิทยาศาสตร์คนใดเป็นผู้ตั้งชื่อ "cell" จากการส่องดูไม้คอร์ก',c:'โรเบิร์ต ฮุก (Robert Hooke)',
+      w:['อันโตนี ฟาน เลเวนฮุก','ชไลเดนและชวานน์','รูดอล์ฟ วีร์โชว์'],
+      e:'โรเบิร์ต ฮุก ส่องไม้คอร์กด้วยกล้องจุลทรรศน์ที่เขาประดิษฐ์ พบช่องเล็ก ๆ จึงเรียกว่า cell (ค.ศ. 1665)'},
+    {q:'ผู้ใดเสนอว่า "เซลล์ใหม่เกิดจากการแบ่งตัวของเซลล์เดิม"',c:'รูดอล์ฟ วีร์โชว์ (Rudolf Virchow)',
+      w:['โรเบิร์ต ฮุก','ชไลเดน','เลเวนฮุก'],
+      e:'วีร์โชว์เสนอแนวคิด Omnis cellula e cellula = ทุกเซลล์เกิดจากเซลล์ที่มีอยู่ก่อน'}
+  ];
+  const c=pick(T);
+  return makeQ({subject:'bio',topic:'เซลล์',diff:1,q:c.q,correct:c.c,wrong:c.w,explain:c.e});
+}
+const BIO=[gOrganelle,gOrganelle,gMacro,gMacroFn,gTransport,gTonicity,gMicroMag,gMicroPart,
+  gSciMethod,gLifeChar,gWater,gEnzyme,gMitosis,gMeiosis,gChromosome,gCellCompare,gLevels,gBranch,gCellTheory];
+
+/* =================================================================
+   STATE + ENGINE
+   ================================================================= */
+const S={subject:'math',diff:'all',total:40*60,left:40*60,running:false,paused:false,tour:false,
+  score:0,streak:0,best:0,correct:0,wrong:0,n:0,lvl:1,answered:false,cur:null,
+  byTopic:{},wrongList:[],recent:[],startTs:0};
+
+function poolFor(){
+  let p = S.subject==='math'?MATH.slice() : S.subject==='bio'?BIO.slice() : MATH.concat(BIO);
+  return p;
+}
+function nextQ(){
+  const pool=poolFor();
+  for(let i=0;i<80;i++){
+    const q=pick(pool)();
+    if(!q) continue;
+    if(S.diff!=='all' && String(q.diff)!==String(S.diff)) continue;
+    const sig=q.q;
+    if(S.recent.indexOf(sig)>=0) continue;
+    S.recent.push(sig); if(S.recent.length>45)S.recent.shift();
+    return q;
+  }
+  for(let i=0;i<40;i++){const q=pick(pool)(); if(q) return q;}
+  return gSetUnion();
+}
+const DIFFTXT={1:'ง่าย',2:'ปานกลาง',3:'ท้าทาย'};
+function renderQ(){
+  const q=S.cur; S.answered=false;
+  $('#tagSub').textContent = q.subject==='math'?'คณิตศาสตร์':'ชีววิทยา';
+  $('#tagTopic').textContent=q.topic;
+  const td=$('#tagDiff'); td.textContent=DIFFTXT[q.diff]; td.className='tag d'+q.diff;
+  $('#qNo').textContent='ข้อที่ '+(S.n+1);
+  $('#qText').textContent=q.q;
+  const box=$('#choices'); box.innerHTML='';
+  const L=['A','B','C','D'];
+  q.choices.forEach((c,i)=>{
+    const b=document.createElement('button');
+    b.className='choice'; b.type='button';
+    b.style.setProperty('--ac',['#00E5FF','#FF2E93','#00FFA3','#FFB020'][i]);
+    const k=document.createElement('span'); k.className='k';
+    const ks=document.createElement('span'); ks.textContent=L[i]; k.appendChild(ks);
+    const t=document.createElement('span'); t.className='tx'; t.textContent=c;
+    b.appendChild(k); b.appendChild(t);
+    b.addEventListener('click',e=>answer(i,e));
+    box.appendChild(b);
+  });
+  $('#explain').className='explain';
+  $('#exBody').innerHTML=''; $('#verdictBox').innerHTML='';
+  const card=$('#qCard'); card.classList.remove('in'); void card.offsetWidth; card.classList.add('in');
+  $('#btnNext').textContent='ข้อถัดไป →';
+}
+function floatScore(txt,x,y,col){
+  const d=document.createElement('div'); d.className='float'; d.textContent=txt;
+  d.style.left=x+'px'; d.style.top=y+'px'; if(col)d.style.color=col, d.style.textShadow='0 0 22px '+col;
+  document.body.appendChild(d); setTimeout(()=>d.remove(),1250);
+}
+function answer(i,ev){
+  if(S.answered||S.paused) return; S.answered=true;
+  const q=S.cur, ok=(i===q.ans);
+  const btns=$$('#choices .choice');
+  btns.forEach((b,j)=>{ b.disabled=true;
+    if(j===q.ans) b.classList.add('ok');
+    else if(j===i) b.classList.add('no');
+    else b.classList.add('dim'); });
+  if(!S.tour){
+    S.n++;
+    const tp=S.byTopic[q.topic]||(S.byTopic[q.topic]={c:0,t:0}); tp.t++;
+    if(ok){
+      S.correct++; S.streak++; tp.c++;
+      if(S.streak>S.best)S.best=S.streak;
+      const gain=100+Math.min(100,S.streak*15)+(q.diff-1)*25;
+      S.score+=gain; SFX.ok();
+      const r=ev&&ev.currentTarget?ev.currentTarget.getBoundingClientRect():{left:innerWidth/2,width:0,top:innerHeight/2};
+      floatScore('+'+gain,r.left+r.width/2,r.top,'#00FFA3');
+      Confetti.burst(S.streak>=5?36:16,r.left+r.width/2,r.top,S.streak>=5?15:10);
+      if(S.streak===5){toast('🔥 FEVER MODE! คอมโบ 5 ข้อติด คะแนนพุ่ง!');document.body.classList.add('fever');}
+    }else{
+      S.wrong++; S.streak=0; document.body.classList.remove('fever'); SFX.no();
+      if(S.wrongList.length<60) S.wrongList.push({q:q.q,topic:q.topic,ans:q.choices[q.ans],
+        picked:q.choices[i],explain:q.explain});
+    }
+    const nl=1+Math.floor(S.score/700);
+    if(nl>S.lvl){S.lvl=nl;SFX.lvl();toast('⬆️ เลเวลอัป! ตอนนี้ LV '+nl);Confetti.burst(50,null,innerHeight*.25,16);}
+    updHUD();
+  }
+  const vb=$('#verdictBox'); vb.innerHTML='';
+  const v=document.createElement('div');
+  v.className='verdict '+(ok?'good':'bad');
+  v.textContent=ok?('✓ ถูกต้อง!'+(S.streak>1?('  คอมโบ ×'+S.streak):'')):('✗ ยังไม่ถูก — คำตอบคือ '+q.choices[q.ans]);
+  vb.appendChild(v);
+  const body=$('#exBody'); body.innerHTML='';
+  q.explain.split('\n').forEach((line,k)=>{
+    if(!line.trim()) return;
+    const p=document.createElement('div'); p.className='exLine'; p.textContent=line;
+    p.style.animationDelay=(k*0.09+0.12)+'s'; body.appendChild(p);
+  });
+  $('#explain').classList.add('show');
+  setTimeout(()=>{ $('#explain').scrollIntoView({block:'nearest',behavior:'smooth'}); },320);
+}
+function updHUD(){
+  $('#scoreVal').textContent=S.score.toLocaleString();
+  $('#lvl').textContent=S.lvl;
+  $('#comboTxt').textContent='COMBO ×'+Math.max(1,S.streak);
+  $('#xpBar').style.width=((S.score%700)/700*100)+'%';
+}
+function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('on');
+  clearTimeout(t._h);t._h=setTimeout(()=>t.classList.remove('on'),2600);}
+const CIRC=2*Math.PI*42;
+$('#ring').style.strokeDasharray=CIRC;
+let lastSec=-1;
+function renderTimer(){
+  const p=S.total?S.left/S.total:0;
+  $('#ring').style.strokeDashoffset=CIRC*(1-p);
+  const s=Math.ceil(S.left);
+  if(s!==lastSec){ lastSec=s; $('#tval').textContent=fmtTime(S.left);
+    if(s<=10&&s>0&&S.running&&!S.paused) SFX.tick(); }
+  const ht=$('#hudTimer'); ht.classList.toggle('warn',p<=.5&&p>.18); ht.classList.toggle('crit',p<=.18);
+  $('#ring').style.stroke = p<=.18?'#FF4D6D' : (p<=.5?'#FFB020':'url(#tg)');
+}
+let lastTs=0;
+function loop(ts){
+  if(!lastTs)lastTs=ts;
+  const dt=(ts-lastTs)/1000; lastTs=ts;
+  if(S.running&&!S.paused&&!S.tour){
+    S.left-=dt;
+    if(S.left<=0){S.left=0;renderTimer();endQuiz('time');return;}
+  }
+  renderTimer(); requestAnimationFrame(loop);
+}
+requestAnimationFrame(loop);
+
+function show(id){ $$('.screen').forEach(s=>s.classList.remove('on')); $(id).classList.add('on'); $(id).scrollTop=0; }
+function startQuiz(tourMode){
+  S.running=true;S.paused=false;S.tour=!!tourMode;S.score=0;S.streak=0;S.best=0;
+  S.correct=0;S.wrong=0;S.n=0;S.lvl=1;S.byTopic={};S.wrongList=[];S.recent=[];
+  S.left=S.total;S.startTs=Date.now();document.body.classList.remove('fever');
+  updHUD();renderTimer();show('#scQuiz');
+  S.cur=nextQ();renderQ();
+  if(tourMode){ setTimeout(()=>{ answer(S.cur.ans,null); setTimeout(()=>tourGo(0),450); },300); }
+}
+function goNext(){
+  if(!S.running) return;
+  if(!S.answered){ // skip
+    S.streak=0; document.body.classList.remove('fever'); updHUD();
+  }
+  S.cur=nextQ(); renderQ(); SFX.tap();
+  $('#scQuiz').scrollTo({top:0,behavior:'smooth'});
+}
+function countTo(el,to,dur,suffix){
+  const st=performance.now(), from=0;
+  function f(t){ const k=Math.min(1,(t-st)/(dur||1200)), e=1-Math.pow(1-k,3);
+    el.textContent=Math.round(from+(to-from)*e).toLocaleString()+(suffix||'');
+    if(k<1)requestAnimationFrame(f); }
+  requestAnimationFrame(f);
+}
+function endQuiz(){
+  if(!S.running) return; S.running=false; S.paused=false; $('#pauseVeil').classList.remove('on');
+  document.body.classList.remove('fever');
+  const used=(S.total-S.left)/60, acc=S.n?S.correct/S.n:0;
+  let rank='D',title='เริ่มต้นใหม่ได้เสมอ!',msg='ลองทบทวนเฉลยด้านล่างแล้วกลับมาใหม่นะ';
+  if(S.n>=12&&acc>=.95){rank='S+';title='เทพเจ้าแห่งข้อสอบ!';msg='ความแม่นยำระดับตำนาน คุณพร้อมสอบจริงแล้ว';}
+  else if(S.n>=8&&acc>=.85){rank='S';title='ยอดเยี่ยมมาก!';msg='แม่นทั้งความเร็วและความถูกต้อง รักษาระดับนี้ไว้';}
+  else if(acc>=.75){rank='A';title='เก่งมาก!';msg='พื้นฐานแน่น เหลือเก็บรายละเอียดอีกนิดเดียว';}
+  else if(acc>=.6){rank='B';title='ดีแล้ว!';msg='ไปได้สวย ลองเน้นหัวข้อที่กราฟด้านล่างยังต่ำอยู่';}
+  else if(acc>=.45){rank='C';title='พอใช้ สู้ต่อ!';msg='อ่านเฉลยทีละข้อจะพัฒนาได้เร็วมาก';}
+  if(S.n<5){rank='—';title='ทำน้อยข้อเกินไป';msg='ลองทำอย่างน้อย 5 ข้อเพื่อให้ประเมินผลได้แม่นยำ';}
+  $('#rankLetter').textContent=rank; $('#rankTitle').textContent=title; $('#rankMsg').textContent=msg;
+  const fs=$('#finalScore'); fs.textContent='0';
+  show('#scResult'); SFX.end();
+  setTimeout(()=>{
+    countTo(fs,S.score,1500);
+    countTo($('#tCorrect'),S.correct,1000); countTo($('#tWrong'),S.wrong,1000);
+    countTo($('#tStreak'),S.best,1000);
+    $('#tSpeed').textContent=(used>0?(S.n/used):0).toFixed(1);
+    const C2=2*Math.PI*48;
+    $('#donutFg').style.strokeDashoffset=C2*(1-acc);
+    const av=$('#accVal'); const st=performance.now();
+    (function f(t){const k=Math.min(1,(t-st)/1400),e=1-Math.pow(1-k,3);
+      av.textContent=Math.round(acc*100*e)+'%'; if(k<1)requestAnimationFrame(f);})(st);
+    Confetti.burst(160,null,innerHeight*.3,19);
+    setTimeout(()=>Confetti.burst(90,innerWidth*.2,innerHeight*.4,15),380);
+    setTimeout(()=>Confetti.burst(90,innerWidth*.8,innerHeight*.4,15),620);
+  },260);
+  const tb=$('#topicBars'); tb.innerHTML='';
+  const keys=Object.keys(S.byTopic);
+  if(!keys.length){ tb.innerHTML='<p class="sub" style="margin:0">ยังไม่มีข้อมูล — ลองทำข้อสอบดูก่อนนะ</p>'; }
+  keys.sort((a,b)=>S.byTopic[b].t-S.byTopic[a].t).forEach((k,i)=>{
+    const d=S.byTopic[k], pc=Math.round(d.c/d.t*100);
+    const row=document.createElement('div'); row.className='tbRow';
+    const top=document.createElement('div'); top.className='tbTop';
+    const b=document.createElement('b'); b.textContent=k;
+    const sp=document.createElement('span'); sp.textContent=d.c+'/'+d.t+'  ('+pc+'%)';
+    top.appendChild(b); top.appendChild(sp);
+    const bar=document.createElement('div'); bar.className='tbBar';
+    const fill=document.createElement('i'); bar.appendChild(fill);
+    row.appendChild(top); row.appendChild(bar); tb.appendChild(row);
+    setTimeout(()=>fill.style.width=pc+'%',350+i*110);
+  });
+  const rl=$('#reviewList'); rl.innerHTML='';
+  if(!S.wrongList.length){
+    rl.innerHTML='<div class="glass" style="padding:18px;text-align:center">🎉 ไม่มีข้อผิดเลย! สุดยอดมาก</div>';
+  }else{
+    S.wrongList.forEach((w,i)=>{
+      const d=document.createElement('div'); d.className='rev';
+      const h=document.createElement('div'); h.className='revHead';
+      const n=document.createElement('span'); n.className='n'; n.textContent='#'+(i+1);
+      const t=document.createElement('span'); t.textContent=w.topic+' — '+w.q.split('\n')[0].slice(0,46)+'…';
+      const ar=document.createElement('span'); ar.style.marginLeft='auto'; ar.textContent='▾';
+      h.appendChild(n);h.appendChild(t);h.appendChild(ar);
+      const bd=document.createElement('div'); bd.className='revBody';
+      const q=document.createElement('p'); q.className='revQ'; q.textContent=w.q;
+      const a=document.createElement('p'); a.className='revA'; a.textContent='✓ คำตอบที่ถูก: '+w.ans;
+      const p=document.createElement('p'); p.className='revB'; p.textContent='✗ คุณตอบ: '+w.picked;
+      const e=document.createElement('p'); e.className='revE'; e.textContent=w.explain;
+      bd.appendChild(q);bd.appendChild(a);bd.appendChild(p);bd.appendChild(e);
+      h.addEventListener('click',()=>d.classList.toggle('open'));
+      d.appendChild(h);d.appendChild(bd);rl.appendChild(d);
+    });
+  }
+}
+
+/* ---------- TOUR ---------- */
+const TOUR=[
+  {el:'#hudTimer',t:'⏱ วงแหวนเวลา',d:'นี่คือเวลารวมของรอบนี้ วงแหวนจะค่อย ๆ ลดลงแบบลื่นไหล เปลี่ยนเป็นสีส้มเมื่อเหลือครึ่งทาง และเป็นสีแดงพร้อมเต้นเตือนในช่วงท้าย'},
+  {el:'#comboWrap',t:'⚡ เลเวล & แถบคอมโบ',d:'ตอบถูกติดกันจะสะสมคอมโบ ยิ่งคอมโบสูงยิ่งได้คะแนนต่อข้อมากขึ้น ครบ 5 ข้อติดจะเข้าโหมด FEVER พื้นหลังทั้งจอจะเปลี่ยนสีทันที'},
+  {el:'#hudScore',t:'🏆 คะแนนสะสม',d:'ตอบถูกได้ 100 คะแนน บวกโบนัสคอมโบ และโบนัสความยากอีก เมื่อคะแนนถึงเกณฑ์จะเลเวลอัปพร้อมเอฟเฟกต์'},
+  {el:'#qCard',t:'🧩 การ์ดโจทย์',d:'โจทย์ถูกสุ่มสร้างใหม่ทุกข้อจากเครื่องกำเนิดโจทย์ จึงทำได้ไม่จำกัด ป้ายด้านบนบอกวิชา หัวข้อ และระดับความยากของข้อนั้น'},
+  {el:'#choices',t:'🎯 ตัวเลือกคำตอบ',d:'แตะเพื่อตอบ หรือกดปุ่มเลข 1–4 บนคีย์บอร์ดก็ได้ ตอบถูกการ์ดจะเรืองแสงเขียวพร้อมคอนเฟตติ ตอบผิดจะสั่นและเฉลยข้อที่ถูกให้ทันที'},
+  {el:'#explain',t:'💡 เฉลยทีละขั้น',d:'ทุกข้อมีวิธีคิดแบบทีละบรรทัด ไล่ปรากฏขึ้นมาแบบแอนิเมชัน อ่านตามได้ง่าย ไม่ต้องเปิดหนังสือ'},
+  {el:'#btnNext',t:'➡️ ไปข้อถัดไป',d:'กดปุ่มนี้ หรือกด Enter / Space เพื่อสุ่มโจทย์ข้อใหม่ ทำต่อเนื่องได้เรื่อย ๆ จนกว่าเวลาจะหมด'},
+  {el:'#btnPause',t:'⏸ หยุดชั่วคราว',d:'กดพัก แล้วเวลาจะหยุดเดินทันที (หรือกดปุ่ม P) หน้าจอจะเบลอเพื่อกันการแอบดูโจทย์'},
+  {el:'#btnEnd',t:'🏁 จบการทดสอบ',d:'กดเมื่อไรก็ได้เพื่อไปหน้าสรุปผลอลังการ มีเกรด คะแนน กราฟความแม่นยำ สถิติรายหัวข้อ และรายการข้อที่ตอบผิดให้ทบทวน'}
+];
+let tIdx=0;
+function tourGo(i){
+  if(i<0)i=0;
+  if(i>=TOUR.length){ tourEnd(); return; }
+  tIdx=i; $('#tour').classList.add('on');
+  const st=TOUR[i], el=$(st.el);
+  if(!el){ tourGo(i+1); return; }
+  el.scrollIntoView({block:'center',behavior:'smooth'});
+  setTimeout(()=>{
+    const r=el.getBoundingClientRect(), pad=10;
+    const sp=$('#spot');
+    sp.style.left=(r.left-pad)+'px'; sp.style.top=(r.top-pad)+'px';
+    sp.style.width=(r.width+pad*2)+'px'; sp.style.height=(r.height+pad*2)+'px';
+    const tip=$('#tip'); const below = r.bottom + 230 < innerHeight;
+    tip.style.top = below? (r.bottom+22)+'px' : 'auto';
+    tip.style.bottom = below? 'auto' : (innerHeight-r.top+22)+'px';
+    $('#tipStep').textContent='STEP '+(i+1)+' / '+TOUR.length;
+    $('#tipTitle').textContent=st.t; $('#tipDesc').textContent=st.d;
+    tip.classList.remove('tipAnim'); void tip.offsetWidth; tip.classList.add('tipAnim');
+    $('#tipPrev').style.display = i===0?'none':'';
+    $('#tipNext').textContent = i===TOUR.length-1?'เริ่มทำข้อสอบเลย 🚀':'ถัดไป →';
+    SFX.tap();
+  },330);
+}
+function tourEnd(){
+  $('#tour').classList.remove('on'); S.tour=false;
+  startQuiz(false); toast('พร้อมแล้ว! ลุยเลย 🚀');
+}
+$('#tipNext').addEventListener('click',()=>tourGo(tIdx+1));
+$('#tipPrev').addEventListener('click',()=>tourGo(tIdx-1));
+$('#tipSkip').addEventListener('click',()=>{ $('#tour').classList.remove('on'); S.tour=false;
+  S.running=false; show('#scHome'); toast('ข้ามทัวร์แล้ว — กดเริ่มได้เลย'); });
+
+/* ---------- EVENTS ---------- */
+$('#subjectGrid').addEventListener('click',e=>{
+  const b=e.target.closest('.sbj'); if(!b)return;
+  $$('.sbj').forEach(x=>x.classList.remove('sel')); b.classList.add('sel');
+  S.subject=b.dataset.sbj; SFX.tap();
+});
+$('#diffRow').addEventListener('click',e=>{
+  const b=e.target.closest('.pill'); if(!b)return;
+  $$('#diffRow .pill').forEach(x=>x.classList.remove('sel')); b.classList.add('sel');
+  S.diff=b.dataset.d; SFX.tap();
+});
+$('#timeRow').addEventListener('click',e=>{
+  const b=e.target.closest('.pill'); if(!b)return;
+  $$('#timeRow .pill').forEach(x=>x.classList.remove('sel')); b.classList.add('sel');
+  S.total=parseInt(b.dataset.t,10)*60; S.left=S.total; renderTimer(); SFX.tap();
+});
+$('#btnStart').addEventListener('click',()=>{ac();startQuiz(false);SFX.tap();});
+$('#btnTour').addEventListener('click',()=>{ac();startQuiz(true);});
+$('#btnSound').addEventListener('click',e=>{soundOn=!soundOn;e.currentTarget.textContent=soundOn?'🔊':'🔇';
+  toast(soundOn?'เปิดเสียงแล้ว':'ปิดเสียงแล้ว');});
+$('#btnNext').addEventListener('click',goNext);
+$('#btnSkip').addEventListener('click',()=>{ if(!S.answered){S.streak=0;updHUD();} goNext(); });
+$('#btnEnd').addEventListener('click',()=>{ if(confirm('ต้องการจบการทดสอบและดูผลสรุปใช่ไหม?')) endQuiz(); });
+function togglePause(){
+  if(!S.running)return; S.paused=!S.paused;
+  document.body.classList.toggle('paused',S.paused);
+  $('#pauseVeil').classList.toggle('on',S.paused);
+  $('#btnPause').textContent=S.paused?'▶':'⏸';
+}
+$('#btnPause').addEventListener('click',togglePause);
+$('#btnResume').addEventListener('click',togglePause);
+$('#btnAgain').addEventListener('click',()=>startQuiz(false));
+$('#btnHome').addEventListener('click',()=>{show('#scHome');S.left=S.total;renderTimer();});
+$('#btnCopy').addEventListener('click',()=>{
+  const acc=S.n?Math.round(S.correct/S.n*100):0;
+  const txt='📊 QUIZ NOVA ∞ — สรุปผล\nวิชา: '+(S.subject==='math'?'คณิต+ตรรกศาสตร์':S.subject==='bio'?'ชีววิทยา':'รวมทุกวิชา')+
+    '\nเกรด: '+$('#rankLetter').textContent+'\nคะแนน: '+S.score+'\nทำไป '+S.n+' ข้อ ถูก '+S.correct+' ผิด '+S.wrong+
+    ' (แม่นยำ '+acc+'%)\nคอมโบสูงสุด: '+S.best+'\nเวลา: '+Math.round((S.total-S.left)/60)+' นาที';
+  (navigator.clipboard?navigator.clipboard.writeText(txt):Promise.reject())
+    .then(()=>toast('คัดลอกสรุปผลแล้ว 📋')).catch(()=>toast('คัดลอกไม่สำเร็จ ลองจับภาพหน้าจอแทนนะ'));
+});
+addEventListener('keydown',e=>{
+  if($('#tour').classList.contains('on')){
+    if(e.key==='ArrowRight'||e.key==='Enter')tourGo(tIdx+1);
+    if(e.key==='ArrowLeft')tourGo(tIdx-1);
+    if(e.key==='Escape')$('#tipSkip').click();
+    return;
+  }
+  if(!$('#scQuiz').classList.contains('on'))return;
+  if(e.key==='p'||e.key==='P'){togglePause();return;}
+  if(S.paused)return;
+  if(['1','2','3','4'].indexOf(e.key)>=0){
+    const b=$$('#choices .choice')[parseInt(e.key,10)-1];
+    if(b&&!b.disabled)b.click();
+  }
+  if(e.key==='Enter'||e.key===' '){e.preventDefault();goNext();}
+});
+addEventListener('resize',()=>{ if($('#tour').classList.contains('on')) tourGo(tIdx); });
+// 3D tilt on question card (desktop)
+(function(){
+  const card=$('#qCard');
+  if(matchMedia('(pointer:fine)').matches){
+    card.addEventListener('pointermove',e=>{
+      const r=card.getBoundingClientRect();
+      const x=(e.clientX-r.left)/r.width-.5, y=(e.clientY-r.top)/r.height-.5;
+      card.style.transform='perspective(1100px) rotateX('+(-y*2.4)+'deg) rotateY('+(x*2.4)+'deg)';
+    });
+    card.addEventListener('pointerleave',()=>card.style.transform='');
+  }
+})();
+renderTimer(); updHUD();
+</script>
+</body>
+</html>
